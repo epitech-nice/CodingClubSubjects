@@ -65,14 +65,14 @@
 #     Entrées : un entier, un tableau de chaînes de caractères
 #     Sorties : un entier
 #     Si argc n'est pas égal à 4 ou (argv[1] n'est pas 'encode' et argv[1] n'est pas 'decode')
-#         Afficher "Usage: ./vigenere_code.py (encode or decode) key file"
+#         Afficher "Usage: ./vigenere_code.py (encode or decode) key decoded"
 #         Retourner 84
 #     Fin Si
 #     Essayer
 #         open_file = ouvrir(argv[3], "r")
 #         content = lire(open_file)
 #     Sauf
-#         Afficher "Error: can't open file"
+#         Afficher "Error: can't open decoded"
 #         Retourner 84
 #     Fin Essayer
 #     Si argv[1] est égal à 'encode'

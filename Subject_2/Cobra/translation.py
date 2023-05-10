@@ -45,13 +45,13 @@ def vigenere(message, cle, crypte):
 
 def vigenere_main(argc, argv):
     if argc != 4 and (argv[1] != 'encode' or argv[1] != 'decode'):
-        print("Usage: ./vigenere_code.py (encode or decode) key file")
+        print("Usage: ./vigenere_code.py (encode or decode) key decoded")
         return 84
     try:
         open_file = open(argv[3], "r")
         content = open_file.read()
     except:
-        print("Error: can't open file")
+        print("Error: can't open decoded")
         return 84
     if argv[1] == 'encode':
         key = argv[2]

@@ -58,10 +58,8 @@ distance = int(input("Distance Terre-Lune en km : "))
 duration = compute_lunar_flight_duration(distance)
 print(f"Durée de vol : {duration}")
 
-message = input("Entrez un message à chiffrer : ")
+message = input("Entrez un message à déchiffrer : ")
 key = int(input("Entrez une clé de chiffrement : "))
-ciphertext = cesar_cipher(message, key)
-print(f"Message chiffré : {ciphertext}")
 
-plaintext = cesar_decipher(ciphertext, key)
+plaintext = cesar_decipher(message, key)
 print(f"Message déchiffré : {plaintext}")
