@@ -8,7 +8,7 @@
 
 import math
 
-def compute_lunar_flight_duration(distance):
+def compute_lunar_flight_duration():
     """
         Calcul la durée de vol nécessaire pour atteindre la Lune
         en fonction de la distance entre la Terre et la Lune.
@@ -18,7 +18,7 @@ def compute_lunar_flight_duration(distance):
     # Vitesse moyenne de la fusée en km/h
     # _ = _
     # Durée de vol en heures
-    # _ = arrondi( _ / _)
+    # _ = arrondi( _ _ _)
     # Conversion en heures et minutes
     # days = _ _ _
     # hours = _ _ _
@@ -52,7 +52,6 @@ def compute_lunar_flight_duration(distance):
 # Fin Fonction
 
 # Programme principal
-distance = int(input("Distance Terre-Lune en km : "))
 duration = 0
 print(f"Durée de vol : {duration}")
 

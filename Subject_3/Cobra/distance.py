@@ -8,13 +8,11 @@
 
 import math
 
-#Distance Terre-Lune en km : 384400
-
-def compute_lunar_flight_duration(distance):
+def compute_lunar_flight_duration():
     """Calcul la durée de vol nécessaire pour atteindre la Lune en fonction de la distance entre la Terre et la Lune."""
     # Distance Terre-Lune en km
-    d = distance
-    # Vitesse moyenne de la fusée en m/s
+    d = 384400
+    # Vitesse moyenne de la fusée Apollo 11 en km/s
     v = 39000
     # Durée de vol en heures
     t = math.ceil(d / v)
@@ -56,8 +54,7 @@ def cesar_decipher(ciphertext, key):
 
 
 # Programme principal
-distance = int(input("Distance Terre-Lune en km : "))
-duration = compute_lunar_flight_duration(distance)
+duration = compute_lunar_flight_duration()
 print(f"Durée de vol : {duration}")
 
 message = input("Entrez un message à chiffrer : ")
