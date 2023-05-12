@@ -7,70 +7,56 @@
 #
 
 import string
-import random
 
-class Enigma:
-    def __init__(self, rotors, rotor_positions):
-        self.rotors = rotors
-        self.rotor_positions = rotor_positions
+# Configuration des rotors et des réflecteurs
+rotor_1 = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
+rotor_2 = "AJDKSIRUXBLHWTMCQGZNPYFVOE"
+rotor_3 = "BDFHJLCPRTXVZNYEIWGAKMUSQO"
+reflector = "YRUHQSLDPXNGOKMIEBFZCWVJAT"
 
-    def set_rotor_positions(self, positions):
-        self.rotor_positions = positions
+# Fonction de chiffrement/déchiffrement
+def enigma(machine, char):
+    if char in string.ascii_uppercase:
+        # Passage à travers les rotors (de droite à gauche)
+        for rotor in reversed(machine["rotors"]):
+            char = rotor[(string.ascii_uppercase.index(char) + machine["position"]) % 26]
 
-    def encode(self, letter):
-        # Tourner les rotors
-        self.rotate()
+        # Passage à travers le réflecteur
+        char = reflector[string.ascii_uppercase.index(char)]
 
-        # Convertir la lettre en un entier de 0 à 25
-        letter_index = ord(letter.upper()) - 65
+        # Passage à travers les rotors (de gauche à droite)
+        for rotor in machine["rotors"]:
+            char = string.ascii_uppercase[(rotor.index(char) - machine["position"]) % 26]
 
-        # Passer la lettre à travers les rotors dans l'ordre
-        for rotor in self.rotors:
-            letter_index = rotor[letter_index]
+        # Incrémentation des positions des rotors
+        machine["position"] = (machine["position"] + 1) % 26
 
-        # Passer la lettre à travers le réflecteur
-        letter_index = (letter_index + 13) % 26
+    return char
 
-        # Passer la lettre à travers les rotors dans l'ordre inverse
-        for rotor in reversed(self.rotors):
-            letter_index = rotor.index(letter_index)
+# Configuration initiale de la machine Enigma
+machine = {
+    "rotors": [rotor_1, rotor_2, rotor_3],
+    "position": 0
+}
 
-        # Convertir l'entier de 0 à 25 en une lettre
-        return chr(letter_index + 65)
+# Chiffrement du mot "PathTek"
+plaintext = "PATHTEK"
+ciphertext = ""
 
-    def rotate(self):
-        # Tourner le rotor droit
-        self.rotor_positions[2] = (self.rotor_positions[2] + 1) % 26
+for char in plaintext:
+    if char in string.ascii_uppercase:
+        ciphertext += enigma(machine, char)
 
-        # Si le rotor droit est à la position de rotation de la notch, tourner le rotor du milieu
-        if self.rotor_positions[2] == self.rotors[2].index(self.rotors[2].notch):
-            self.rotor_positions[1] = (self.rotor_positions[1] + 1) % 26
+print("Texte chiffré : ", ciphertext)
 
-        # Si le rotor du milieu est à la position de rotation de la notch, tourner le rotor de gauche
-        if self.rotor_positions[1] == self.rotors[1].index(self.rotors[1].notch):
-            self.rotor_positions[0] = (self.rotor_positions[0] + 1) % 26
+# Réinitialisation de la machine Enigma
+machine["position"] = 0
 
-    def set_rotor_positions(self, positions):
-        self.rotor_positions = positions
+# Déchiffrement du texte chiffré
+decrypted_text = ""
 
+for char in ciphertext:
+    if char in string.ascii_uppercase:
+        decrypted_text += enigma(machine, char)
 
-# Configuration de rotors et de réglages
-enigma = Enigma(['EKMFLGDQVZNTOWYHXUSPAIBRCJ', 'AJDKSIRUXBLHWTMCQGZNPYFVOE', 'BDFHJLCPRTXVZNYEIWGAKMUSQ'], [0, 0, 0])
-
-# Texte à chiffrer
-plaintext = 'PathTek'
-
-# Chiffrement du texte
-ciphertext = ''
-for i in range(len(plaintext)):
-    enigma.set_rotor_positions([i, i, i])
-    ciphertext += enigma.encode(plaintext[i])
-print(ciphertext) # imprime "GZTLFAJ"
-
-# Déchiffrement du texte
-enigma = Enigma(['EKMFLGDQVZNTOWYHXUSPAIBRCJ', 'AJDKSIRUXBLHWTMCQGZNPYFVOE', 'BDFHJLCPRTXVZNYEIWGAKMUSQ'], [0, 0, 0]) # Réinitialiser la machine avec les mêmes paramètres
-plaintext = ''
-for i in range(len(ciphertext)):
-    enigma.set_rotor_positions([i, i, i])
-    plaintext += enigma.encode(ciphertext[i])
-print(plaintext) # imprime "PATHTek"
+print("Texte déchiffré : ", decrypted_text)

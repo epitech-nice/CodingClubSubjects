@@ -8,58 +8,56 @@
 
 import math
 
-
 def compute_lunar_flight_duration(distance):
-    """Calcul la durée de vol nécessaire pour atteindre la Lune en fonction de la distance entre la Terre et la Lune."""
+    """
+        Calcul la durée de vol nécessaire pour atteindre la Lune
+        en fonction de la distance entre la Terre et la Lune.
+    """
     # Distance Terre-Lune en km
-    # d = ____
+    # _ = _
     # Vitesse moyenne de la fusée en km/h
-    # v = ____
+    # _ = _
     # Durée de vol en heures
-    # t = math.ceil(____ / ____)
+    # _ = arrondi( _ / _)
     # Conversion en heures et minutes
-    # hours = ____ // ____
-    # minutes = ____ % ____
-    # return f"{____} heures et {____} minutes"
+    # days = _ _ _
+    # hours = _ _ _
+    # minutes = _ _ _ _ _
+    # return f"{ _ } heures et { _ } minutes"
 
+# Fonction cesar_cipher(message, key)
+#     Entrées : une chaîne de caractères et un entier
+#     Sortie : une chaîne de caractères
+#     ciphertext = ""
+#     Pour chaque lettre dans message
+#         ascii_code = ASCII(lettre)
+#         shifted_code = (ascii_code - _ + key) modulo _ + _
+#         shifted_letter = caractère correspondant à shifted_code
+#         ciphertext += shifted_letter
+#     Fin Pour
+#     Retourner ciphertext
+# Fin Fonction
 
-def cesar_cipher(message, key):
-    """Chiffre un message en utilisant le chiffrement César."""
-    ciphertext = ""
-    for letter in message:
-        # Conversion en code ASCII
-        ascii_code = ord(letter)
-        # Application du décalage avec la clé de chiffrement
-        shifted_code = (ascii_code - 65 + key) % 26 + 65
-        # Conversion en caractère
-        shifted_letter = chr(shifted_code)
-        # Ajout au message chiffré
-        ciphertext += shifted_letter
-    return ciphertext
-
-
-def cesar_decipher(ciphertext, key):
-    """Déchiffre un message chiffré en utilisant le chiffrement César."""
-    plaintext = ""
-    for letter in ciphertext:
-        # Conversion en code ASCII
-        ascii_code = ord(letter)
-        # Application du décalage avec la clé de chiffrement
-        shifted_code = (ascii_code - 65 - key) % 26 + 65
-        # Conversion en caractère
-        shifted_letter = chr(shifted_code)
-        # Ajout au message déchiffré
-        plaintext += shifted_letter
-    return plaintext
-
+# Fonction cesar_decipher(ciphertext, key)
+#     Entrées : une chaîne de caractères et un entier
+#     Sortie : une chaîne de caractères
+#     plaintext = ""
+#     Pour chaque lettre dans ciphertext
+#         ascii_code = ASCII(lettre)
+#         shifted_code = (ascii_code - _ - key) modulo _ + _
+#         shifted_letter = caractère correspondant à shifted_code
+#         plaintext += shifted_letter
+#     Fin Pour
+#     Retourner plaintext
+# Fin Fonction
 
 # Programme principal
 distance = int(input("Distance Terre-Lune en km : "))
-duration = compute_lunar_flight_duration(distance)
+duration = 0
 print(f"Durée de vol : {duration}")
 
 message = input("Entrez un message à déchiffrer : ")
 key = int(input("Entrez une clé de chiffrement : "))
 
-plaintext = cesar_decipher(message, key)
+plaintext = ""
 print(f"Message déchiffré : {plaintext}")

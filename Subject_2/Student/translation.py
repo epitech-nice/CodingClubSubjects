@@ -53,8 +53,8 @@
 #                 chiffre += decalage(c, -k)
 #             Fin Si
 #                 n += 1
-#             Sinon
-#                 chiffre += c
+#         Sinon
+#             chiffre += c
 #         Fin Si
 #     Fin Pour
 #     Retourner chiffre

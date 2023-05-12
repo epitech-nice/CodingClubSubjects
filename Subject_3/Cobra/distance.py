@@ -8,19 +8,21 @@
 
 import math
 
+#Distance Terre-Lune en km : 384400
 
 def compute_lunar_flight_duration(distance):
     """Calcul la durée de vol nécessaire pour atteindre la Lune en fonction de la distance entre la Terre et la Lune."""
     # Distance Terre-Lune en km
     d = distance
-    # Vitesse moyenne de la fusée en km/h
-    v = 38600
+    # Vitesse moyenne de la fusée en m/s
+    v = 39000
     # Durée de vol en heures
     t = math.ceil(d / v)
     # Conversion en heures et minutes
-    hours = t // 60
-    minutes = t % 60
-    return f"{hours} heures et {minutes} minutes"
+    days = t // 24
+    hours = t % 24
+    minutes = (t % 1) * 60
+    return f"{days} jours, {hours} heures et {minutes} minutes"
 
 
 def cesar_cipher(message, key):
