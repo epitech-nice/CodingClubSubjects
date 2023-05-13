@@ -41,7 +41,7 @@ machine = {
     "position": 0
 }
 
-ciphertext = "GREFZAA"
+ciphertext = ""
 
 print("Texte chiffré : ", ciphertext)
 
