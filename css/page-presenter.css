@@ -1,0 +1,26 @@
+/* ========== PAGE PRESENTER ========== */
+
+.page-presenter {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #FFFFFF;
+}
+
+.page-presenter .title {
+    font-size: 8em;
+    font-weight: bold;
+}
+
+.page-presenter .subtitle {
+    font-size: 4em;
+}
+
+.page-presenter .summary {
+    font-size: 3em;
+}
