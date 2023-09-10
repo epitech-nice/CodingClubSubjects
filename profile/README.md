@@ -1,12 +1,9 @@
-## Hi there 👋
+## Hello tout le monde 👋👋👋
 
-<!--
+Bienvenue ici sur les projets Coding Club d'Epitech Nice !
 
-**Here are some ideas to get you started:**
+Qu’est-ce que le Coding Club ?
 
-🙋‍♀️ A short introduction - what is your organization all about?
-🌈 Contribution guidelines - how can the community get involved?
-👩‍💻 Useful resources - where can the community find your docs? Is there anything else the community should know?
-🍿 Fun facts - what does your team eat for breakfast?
-🧙 Remember, you can do mighty things with the power of [Markdown](https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
--->
+Les Coding Clubs sont des ateliers animés par nos étudiants pour vous initier à la programmation.
+Il existe de nombreuses thématiques, comme les jeux vidéo, le web ou l'Arduino.
+Ces ateliers sont gratuits et organisés partout en France, disponibles sur tous nos campus mais également à distance depuis le canal Discord.
