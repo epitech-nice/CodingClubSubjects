@@ -108,8 +108,8 @@ end
 -- Créé un reseau de neurone
 function newReseau()
 	local reseau = {
-		nbNeurone = 0,          -- Taille des neurones  rajouté par l'algo (hors input output du coup)
-		fitness = 1,            -- Beaucoup de division, pour eviter de faire l irreparable
+		nbNeurone = 0, -- Taille des neurones  rajouté par l'algo (hors input output du coup)
+		fitness = 1, -- Beaucoup de division, pour eviter de faire l irreparable
 		idEspeceParent = 0,
 		lesNeurones = {},
 		lesConnexions = {}
@@ -131,11 +131,11 @@ end
 -- Créé une espece (un regroupement de reseaux, d'individus)
 function newEspece()
 	local espece = {
-		nbEnfant = 0,          -- Combien d'enfant cette espece a créé
-		fitnessMoyenne = 0,    -- Fitness moyenne de l'espece
-		fitnessMax = 0,        -- Fitness max atteinte par l'espece
+		nbEnfant = 0, -- Combien d'enfant cette espece a créé
+		fitnessMoyenne = 0, -- Fitness moyenne de l'espece
+		fitnessMax = 0, -- Fitness max atteinte par l'espece
 		lesReseaux = {}
-	}                          -- Tableau qui regroupe les reseaux}
+	}                 -- Tableau qui regroupe les reseaux}
 
 
 	return espece
@@ -227,7 +227,6 @@ function mutationAjouterConnexion(unReseau)
 				local neurone1 = liste[i]
 				local neurone2 = liste[j]
 
-
 				if (neurone1.type == "input" and neurone2.type == "output") or
 					(neurone1.type == "hidden" and neurone2.type == "hidden") or
 					(neurone1.type == "hidden" and neurone2.type == "output") then
@@ -240,8 +239,6 @@ function mutationAjouterConnexion(unReseau)
 							break
 						end
 					end
-
-
 
 					if dejaConnexion == false then
 						-- Nouvelle connexion, traitement terminé
@@ -598,7 +595,7 @@ function nouvelleGeneration(laPopulation, lesEspeces)
 	-- Chaque espece va créer un certain nombre d'individu dans la nouvelle population en fonction de si l'espece a un bon fitness ou pas
 	for i = 1, #lesEspeces, 1 do
 		local nbIndividuEspece = math.ceil(#lesEspeces[i].lesReseaux * lesEspeces[i].fitnessMoyenne /
-		fitnessMoyenneGlobal)
+			fitnessMoyenneGlobal)
 		nbIndividuACreer = nbIndividuACreer - nbIndividuEspece
 		if nbIndividuACreer < 0 then
 			nbIndividuEspece = nbIndividuEspece + nbIndividuACreer
@@ -1045,7 +1042,7 @@ function dessinerUnReseau(unReseau)
 
 	for i = 1, unReseau.nbNeurone, 1 do
 		local xT = ENCRAGE_X_HIDDEN +
-		(TAILLE_HIDDEN + 1) * (i - (NB_HIDDEN_PAR_LIGNE * math.floor((i - 1) / NB_HIDDEN_PAR_LIGNE)))
+			(TAILLE_HIDDEN + 1) * (i - (NB_HIDDEN_PAR_LIGNE * math.floor((i - 1) / NB_HIDDEN_PAR_LIGNE)))
 		local yT = ENCRAGE_Y_HIDDEN + (TAILLE_HIDDEN + 1) * (math.floor((i - 1) / NB_HIDDEN_PAR_LIGNE))
 		-- Tous les 10 j'affiche le restant des neuroens en dessous
 
@@ -1119,8 +1116,15 @@ function lancerNiveau()
 	nbFrameStop = 0
 end
 
+--[[
+		Maintenant la partie du code qui va être executé au lancement du script
+--]]
+
+
 console.clear()
--- Petit check pour voir si c'est bien la bonne rom
+
+
+-- On regarde si c'est bien la bonne ROM
 if gameinfo.getromname() ~= NOM_JEU then
 	console.log("mauvaise rom (actuellement " .. gameinfo.getromname() .. "), marche uniquement avec " .. nomJeu)
 else
@@ -1247,9 +1251,10 @@ else
 			"\nIl y a " .. #lesEspeces .. " espece(s) "
 		for i = 1, #lesEspeces, 1 do
 			str = str ..
-			"\nespece " ..
-			i ..
-			" a fait " .. lesEspeces[i].nbEnfant .. " enfant(s)" .. " (fitnessmax " .. lesEspeces[i].fitnessMax .. ") "
+				"\nespece " ..
+				i ..
+				" a fait " ..
+				lesEspeces[i].nbEnfant .. " enfant(s)" .. " (fitnessmax " .. lesEspeces[i].fitnessMax .. ") "
 		end
 		forms.settext(labelInfo, str)
 	end
