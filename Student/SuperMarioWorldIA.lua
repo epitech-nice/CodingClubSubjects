@@ -61,16 +61,16 @@ lesBoutons = {
 	{ nom = "P1 Right" }
 }
 
-nbInnovation = 0                -- Nombre d'innovation global pour les connexions, important pour le reseau de neurone
-fitnessMax = 0                  -- Fitness max atteinte
-nbGeneration = 1                -- Pour suivre on est à la cb de generation
-idPopulation = 1                -- Quel id de la population est en train de passer dans la boucle
-marioBase = {}                  -- Position de mario a la base ça va me servir pour voir si il avance de sa position d'origine / derniere pos enregistrée
+nbInnovation = 0            -- Nombre d'innovation global pour les connexions, important pour le reseau de neurone
+fitnessMax = 0              -- Fitness max atteinte
+nbGeneration = 1            -- Pour suivre on est à la cb de generation
+idPopulation = 1            -- Quel id de la population est en train de passer dans la boucle
+marioBase = {}              -- Position de mario a la base ça va me servir pour voir si il avance de sa position d'origine / derniere pos enregistrée
 niveauFini = false
-lesAnciennesPopulation = {}     -- Stock les anciennes population
-nbFrame = 0                     -- Nombre de frame actuellement
-nbFrameStop = 0                 -- Permettra de reset le jeu au besoin
-fitnessInit = 0                 -- Fitness à laquelle le reseau actuel commence est init
+lesAnciennesPopulation = {} -- Stock les anciennes population
+nbFrame = 0                 -- Nombre de frame actuellement
+nbFrameStop = 0             -- Permettra de reset le jeu au besoin
+fitnessInit = 0             -- Fitness à laquelle le reseau actuel commence est init
 niveauFiniSauvegarde = false
 lesEspeces = {}
 laPopulation = {}
@@ -87,37 +87,36 @@ end
 -- Créé un neurone
 function newNeurone()
 	local neurone = {}
-	neurone.valeur = 0
-	neurone.id = 0      -- Pas init si à 0, doit être == à l'indice du neurone dans lesNeurones du reseau
-	neurone.type = ""
+	-- Valeur du neurone 0
+	-- Id du neurone 0
+	-- Type du neurone ""
 	return neurone
 end
 
 -- Créé une connexion
 function newConnexion()
 	local connexion = {}
-	connexion.entree = 0
-	connexion.sortie = 0
-	connexion.actif = true
-	connexion.poids = 0
-	connexion.innovation = 0
-	connexion.allume = false -- Pour le dessin, si true ça veut dire que le resultat de la connexion est different de 0
+	-- Entree de la connexion 0
+	-- Sortie de la connexion 0
+	-- Actif de la connexion vrai
+	-- Poids de la connexion 0
+	-- Innovation de la connexion 0
+	-- Allume de la connexion faux
 	return connexion
 end
 
 -- Créé un reseau de neurone
 function newReseau()
-	local reseau = {
-		nbNeurone = 0, 	    -- Taille des neurones  rajouté par l'algo (hors input output du coup)
-		fitness = 1,    	-- Beaucoup de division, pour eviter de faire l irreparable
-		idEspeceParent = 0,
-		lesNeurones = {},
-		lesConnexions = {}
-	}
+	local reseau = {}
+	-- Nombre de neurone 0
+	-- Fitness 1
+	-- Id de l'espece parent 0
+	-- Tableau de neurone vide
+	-- Tableau de connexion vide
+
 	for j = 1, NB_INPUT, 1 do
 		ajouterNeurone(reseau, j, "input", 1)
 	end
-
 
 	-- Ensuite, les outputs
 	for j = NB_INPUT + 1, NB_INPUT + NB_OUTPUT, 1 do
@@ -130,18 +129,39 @@ end
 
 -- Créé une espece (un regroupement de reseaux, d'individus)
 function newEspece()
-	local espece = {
-		nbEnfant = 0, 		-- Combien d'enfant cette espece a créé
-		fitnessMoyenne = 0, -- Fitness moyenne de l'espece
-		fitnessMax = 0, 	-- Fitness max atteinte par l'espece
-		lesReseaux = {}
-	}                 		-- Tableau qui regroupe les reseaux}
-
+	local espece = {}
+	-- nbEnfant 0
+	-- fitnessMoyenne 0
+	-- fitnessMax 0
+	-- Tableau de reseau vide
 	return espece
 end
 
--- Copie un truc et renvoie le truc copié
--- J'ai copié ce code d'ici http://lua-users.org/wiki/CopyTable c vrai en +
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Copie quelque chose et le renvoie
 function copier(orig)
 	local orig_type = type(orig)
 	local copy
@@ -161,9 +181,9 @@ end
 function ajouterConnexion(unReseau, entree, sortie, poids)
 	-- Test pour voir si tout va bien et que les neurones de la connexion existent bien
 	if unReseau.lesNeurones[entree].id == 0 then
-		console.log("connexion avec l'entree " .. entree .. " n'est pas init ?")
+		console.log("Connexion avec l'entree " .. entree .. " n'est pas init ?")
 	elseif unReseau.lesNeurones[sortie].id == 0 then
-		console.log("connexion avec la sortie " .. sortie .. " n'est pas init ?")
+		console.log("Connexion avec la sortie " .. sortie .. " n'est pas init ?")
 	else
 		local connexion = newConnexion()
 		connexion.actif = true
@@ -808,10 +828,46 @@ function majReseau(unReseau, marioBase)
 	end
 end
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 -- Renvoie l'indice du tableau lesInputs avec les coordonnées x y, peut être utilisé aussi pour acceder aux inputs du réseau de neurone
 function getIndiceLesInputs(x, y)
 	return x + ((y - 1) * NB_TILE_W)
 end
+
+
+
+
 
 -- Renvoie les inputs, sont créées en fonction d'où est mario
 function getLesInputs()
@@ -843,6 +899,12 @@ function getLesInputs()
 	return lesInputs
 end
 
+
+
+
+
+
+
 -- Retourne une liste de taille 10 max de la position (x, y) des sprites à l'écran. (sprite = mechant truc)
 function getLesSprites()
 	local lesSprites = {}
@@ -872,6 +934,11 @@ function getLesSprites()
 
 	return lesSprites
 end
+
+
+
+
+
 
 -- Renvoie une table qui a la meme taille que lesInputs. On y accède de la meme façon
 function getLesTiles()
@@ -905,6 +972,11 @@ function getLesTiles()
 	return lesTiles
 end
 
+
+
+
+
+
 -- Retourne la position de mario (x, y)
 function getPositionMario()
 	local mario = {}
@@ -922,6 +994,10 @@ function getPositionCamera()
 	return camera
 end
 
+
+
+
+
 -- Permet de convertir une position pour avoir les arguments x et y du tableau lesInputs
 function convertirPositionPourInput(position)
 	local mario = getPositionMario()
@@ -934,6 +1010,10 @@ function convertirPositionPourInput(position)
 
 	return positionT
 end
+
+
+
+
 
 -- Applique les boutons aux joypad de l'emulateur avec un reseau de neurone
 function appliquerLesBoutons(unReseau)
@@ -958,6 +1038,13 @@ function traitementPause()
 	end
 	joypad.set(lesBoutons)
 end
+
+
+
+
+
+
+
 
 -- Dessine les informations actuelles
 function dessinerLesInfos(laPopulation, lesEspeces, nbGeneration)
@@ -1068,6 +1155,29 @@ function dessinerUnReseau(unReseau)
 	end
 end
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 event.onexit(function()
 	console.log("Fin du script")
 	gui.clearGraphics()
@@ -1101,8 +1211,6 @@ function lancerNiveau()
 	niveauFini = false
 	nbFrameStop = 0
 end
-
-
 
 --[[
 		Maintenant la partie du code qui va être executé au lancement du script
@@ -1174,9 +1282,9 @@ else
 		end
 
 
-		majReseau(laPopulation[idPopulation], marioBase)
-		feedForward(laPopulation[idPopulation])
-		appliquerLesBoutons(laPopulation[idPopulation])
+		-- majReseau(laPopulation[idPopulation], marioBase)
+		-- feedForward(laPopulation[idPopulation])
+		-- appliquerLesBoutons(laPopulation[idPopulation])
 
 
 		if nbFrame == 0 then

@@ -281,17 +281,17 @@ fonction nouvelleGeneration(laPopulation, lesEspeces):
     laNouvellePopulation = newPopulation()
     nbIndividuACreer = NB_INDIVIDU_POPULATION
     indiceNouvelleEspece = 1
-    
+
     fitnessMaxPop = 0
     fitnessMaxAncPop = 0
     ancienPlusFort = newReseau()
-    
+
     pour chaque individu de laPopulation:
         si fitnessMaxPop < individu.fitness alors:
             fitnessMaxPop = individu.fitness
         fin si
     fin pour
-    
+
     si taille de lesAnciennesPopulation > 0 alors:
         pour chaque anciennePopulation dans lesAnciennesPopulation:
             pour chaque individu dans anciennePopulation:
@@ -302,7 +302,7 @@ fonction nouvelleGeneration(laPopulation, lesEspeces):
             fin pour
         fin pour
     fin si
-    
+
     si fitnessMaxAncPop > fitnessMaxPop alors:
         pour chaque espèce dans lesEspeces:
             pour chaque individu dans espèce.lesReseaux:
@@ -347,39 +347,39 @@ fonction nouvelleGeneration(laPopulation, lesEspeces):
     
     fitnessMoyenneGlobal = fitnessMoyenneGlobal / nbIndividuTotal
     trier lesEspeces par fitnessMax décroissant
-    
+
     pour chaque espèce dans lesEspeces:
         nbIndividuEspece = arrondir_sup(taille de espèce.lesReseaux * espèce.fitnessMoyenne / fitnessMoyenneGlobal)
         nbIndividuACreer = nbIndividuACreer - nbIndividuEspece
-        
+
         si nbIndividuACreer < 0 alors:
             nbIndividuEspece = nbIndividuEspece + nbIndividuACreer
             nbIndividuACreer = 0
         fin si
-        
+
         espèce.nbEnfant = nbIndividuEspece
-        
+
         pour chaque individu de 1 à nbIndividuEspece:
             si indiceNouvelleEspece > NB_INDIVIDU_POPULATION alors quitter la boucle
             unReseau = crossover(choisirParent(espèce.lesReseaux), choisirParent(espèce.lesReseaux))
-            
+
             si fitnessMoyenneGlobal ≠ FITNESS_LEVEL_FINI alors:
                 mutation(unReseau)
             fin si
-            
+
             unReseau.idEspeceParent = indiceNouvelleEspece
             ajouter unReseau à laNouvellePopulation
             unReseau.fitness = 1
             indiceNouvelleEspece = indiceNouvelleEspece + 1
         fin pour
-        
+
         si indiceNouvelleEspece > NB_INDIVIDU_POPULATION alors quitter la boucle
     fin pour
-    
+
     pour chaque espèce dans lesEspeces:
         si espèce.nbEnfant == 0 alors supprimer espèce
     fin pour
-    
+
     retourner laNouvellePopulation
 fin fonction
 
@@ -390,28 +390,28 @@ fin fonction
 
 fonction sauvegarderPopulation(laPopulation, estFini):
     chemin = getNomFichierSauvegarde()
-    
+
     si estFini alors:
         chemin = "FINI " + chemin
     fin si
-    
+
     fichier = ouvrir(chemin, "w+")
-    
+
     écrire fichier, nbGeneration
     écrire fichier, nbInnovation
-    
+
     pour chaque individu de laPopulation:
         sauvegarderUnReseau(individu, fichier)
     fin pour
-    
+
     lePlusFort = newReseau()
-    
+
     pour chaque individu de laPopulation:
         si lePlusFort.fitness < individu.fitness alors:
             lePlusFort = copie de individu
         fin si
     fin pour
-    
+
     si taille de lesAnciennesPopulation > 0 alors:
         pour chaque anciennePopulation dans lesAnciennesPopulation:
             pour chaque individu dans anciennePopulation:
@@ -421,10 +421,10 @@ fonction sauvegarderPopulation(laPopulation, estFini):
             fin pour
         fin pour
     fin si
-    
+
     sauvegarderUnReseau(lePlusFort, fichier)
     fermer fichier
-    
+
     afficher "Sauvegarde terminée dans le fichier " + chemin
 fin fonction
 
@@ -434,10 +434,10 @@ fonction chargerPopulation(chemin):
         afficher "Le fichier " + chemin + " n'est pas du bon format (.pop)."
         retourner nul
     fin si
-    
+
     laPopulation = {}
     fichier = ouvrir(chemin, "r")
-    
+
     nbGeneration = lireNombre(fichier)
     nbInnovation = lireNombre(fichier)
     
@@ -445,11 +445,11 @@ fonction chargerPopulation(chemin):
         ajouter chargerUnReseau(fichier) à laPopulation
         laPopulation[i].fitness = 1
     fin pour
-    
+
     lesAnciennesPopulation = {}
     insérer copie de laPopulation dans lesAnciennesPopulation
     lesAnciennesPopulation[1][1] = chargerUnReseau(fichier)
-    
+
     si lesAnciennesPopulation[1][1].fitness == FITNESS_LEVEL_FINI alors
         pour i de 1 à NB_INDIVIDU_POPULATION faire
             laPopulation[i] = copie de lesAnciennesPopulation[1][1]
