@@ -61,16 +61,16 @@ lesBoutons = {
 	{ nom = "P1 Right" }
 }
 
-nbInnovation = 0            -- Nombre d'innovation global pour les connexions, important pour le reseau de neurone
-fitnessMax = 0              -- Fitness max atteinte
-nbGeneration = 1            -- Pour suivre on est à la cb de generation
-idPopulation = 1            -- Quel id de la population est en train de passer dans la boucle
-marioBase = {}              -- Position de mario a la base ça va me servir pour voir si il avance de sa position d'origine / derniere pos enregistrée
+nbInnovation = 0                -- Nombre d'innovation global pour les connexions, important pour le reseau de neurone
+fitnessMax = 0                  -- Fitness max atteinte
+nbGeneration = 1                -- Pour suivre on est à la cb de generation
+idPopulation = 1                -- Quel id de la population est en train de passer dans la boucle
+marioBase = {}                  -- Position de mario a la base ça va me servir pour voir si il avance de sa position d'origine / derniere pos enregistrée
 niveauFini = false
-lesAnciennesPopulation = {} -- Stock les anciennes population
-nbFrame = 0                 -- Nombre de frame actuellement
-nbFrameStop = 0             -- Permettra de reset le jeu au besoin
-fitnessInit = 0             -- Fitness à laquelle le reseau actuel commence est init
+lesAnciennesPopulation = {}     -- Stock les anciennes population
+nbFrame = 0                     -- Nombre de frame actuellement
+nbFrameStop = 0                 -- Permettra de reset le jeu au besoin
+fitnessInit = 0                 -- Fitness à laquelle le reseau actuel commence est init
 niveauFiniSauvegarde = false
 lesEspeces = {}
 laPopulation = {}
@@ -88,7 +88,7 @@ end
 function newNeurone()
 	local neurone = {}
 	neurone.valeur = 0
-	neurone.id = 0 -- Pas init si à 0, doit être == à l'indice du neurone dans lesNeurones du reseau
+	neurone.id = 0      -- Pas init si à 0, doit être == à l'indice du neurone dans lesNeurones du reseau
 	neurone.type = ""
 	return neurone
 end
@@ -108,8 +108,8 @@ end
 -- Créé un reseau de neurone
 function newReseau()
 	local reseau = {
-		nbNeurone = 0, -- Taille des neurones  rajouté par l'algo (hors input output du coup)
-		fitness = 1, -- Beaucoup de division, pour eviter de faire l irreparable
+		nbNeurone = 0, 	    -- Taille des neurones  rajouté par l'algo (hors input output du coup)
+		fitness = 1,    	-- Beaucoup de division, pour eviter de faire l irreparable
 		idEspeceParent = 0,
 		lesNeurones = {},
 		lesConnexions = {}
@@ -131,12 +131,11 @@ end
 -- Créé une espece (un regroupement de reseaux, d'individus)
 function newEspece()
 	local espece = {
-		nbEnfant = 0, -- Combien d'enfant cette espece a créé
+		nbEnfant = 0, 		-- Combien d'enfant cette espece a créé
 		fitnessMoyenne = 0, -- Fitness moyenne de l'espece
-		fitnessMax = 0, -- Fitness max atteinte par l'espece
+		fitnessMax = 0, 	-- Fitness max atteinte par l'espece
 		lesReseaux = {}
-	}                 -- Tableau qui regroupe les reseaux}
-
+	}                 		-- Tableau qui regroupe les reseaux}
 
 	return espece
 end
@@ -256,9 +255,8 @@ function mutationAjouterConnexion(unReseau)
 		end
 	end
 
-
 	if traitement == false then
-		console.log("impossible de recreer une connexion")
+		console.log("Impossible de recreer une connexion")
 	end
 end
 
@@ -503,7 +501,7 @@ function choisirParent(uneEspece)
 			return copier(uneEspece[i])
 		end
 	end
-	console.log("impossible de trouver un parent ?")
+	console.log("Impossible de trouver un parent ?")
 	return nil
 end
 
@@ -549,7 +547,7 @@ function nouvelleGeneration(laPopulation, lesEspeces)
 				lesEspeces[i].lesReseaux[j] = copier(ancienPlusFort)
 			end
 		end
-		console.log("mauvaise population je reprends la meilleur et ça redevient la base de la nouvelle pop")
+		console.log("Mauvaise population je reprends la meilleur et ça redevient la base de la nouvelle pop")
 		console.log(ancienPlusFort)
 	end
 
@@ -603,7 +601,6 @@ function nouvelleGeneration(laPopulation, lesEspeces)
 		end
 		lesEspeces[i].nbEnfant = nbIndividuEspece
 
-
 		for j = 1, nbIndividuEspece, 1 do
 			if indiceNouvelleEspece > NB_INDIVIDU_POPULATION then
 				break
@@ -638,7 +635,7 @@ end
 
 function getNomFichierSauvegarde()
 	local str = NOM_FICHIER_POPULATION
-	str = string.gsub(str, "idGen", nbGeneration)
+	str = string.gsub(str, "idGen", nbGeneration) + "_" + os.date("%Y%m%d%H%M%S")
 	return str
 end
 
@@ -794,7 +791,6 @@ end
 function majReseau(unReseau, marioBase)
 	local mario = getPositionMario()
 
-
 	-- Niveau fini ?
 	if not niveauFini and memory.readbyte(0x0100) == 12 then
 		unReseau.fitness = FITNESS_LEVEL_FINI -- comme ça l'espece de cette population va dominer les autres
@@ -834,8 +830,6 @@ function getLesInputs()
 		end
 	end
 
-
-
 	local lesTiles = getLesTiles()
 	for i = 1, NB_TILE_W, 1 do
 		for j = 1, NB_TILE_H, 1 do
@@ -845,7 +839,6 @@ function getLesInputs()
 			end
 		end
 	end
-
 
 	return lesInputs
 end
@@ -866,7 +859,6 @@ function getLesSprites()
 		end
 	end
 
-
 	-- Ça c'est les extended sprites, c'est d'autres truc du jeu en gros
 	for i = 0, NB_SPRITE_MAX, 1 do
 		if memory.readbyte(0x170B + i) ~= 0 then
@@ -885,7 +877,6 @@ end
 function getLesTiles()
 	local lesTiles = {}
 	local j = 1
-
 
 	-- Les tiles vont etre affiché autour de mario
 	mario = getPositionMario()
@@ -972,7 +963,7 @@ end
 function dessinerLesInfos(laPopulation, lesEspeces, nbGeneration)
 	gui.drawBox(0, 0, 256, 40, "black", "white")
 
-	gui.drawText(0, 4, "Generation " .. nbGeneration .. " Ind:" .. idPopulation .. " nb espece " ..
+	gui.drawText(0, 4, "Generation " .. nbGeneration .. " Ind:" .. idPopulation .. " Nb Espece " ..
 		#lesEspeces .. "\nFitness:" ..
 		laPopulation[idPopulation].fitness .. " (max = " .. fitnessMax .. ")", "black")
 end
@@ -1006,8 +997,6 @@ function dessinerUnReseau(unReseau)
 			lesPositions[indice].y = yT + TAILLE_INPUT / 2
 		end
 	end
-
-
 
 	-- Affichage du MARIO sur la grille, MARIO N'EST PAS UNE INPUT OUI C'EST POUR FAIRE JOLIE
 	local mario = convertirPositionPourInput(getPositionMario())
@@ -1053,9 +1042,6 @@ function dessinerUnReseau(unReseau)
 		lesPositions[indice].x = xT + TAILLE_HIDDEN / 2
 		lesPositions[indice].y = yT + TAILLE_HIDDEN / 2
 	end
-
-
-
 
 	-- Affichage des connexions
 	for i = 1, #unReseau.lesConnexions, 1 do
@@ -1116,6 +1102,8 @@ function lancerNiveau()
 	nbFrameStop = 0
 end
 
+
+
 --[[
 		Maintenant la partie du code qui va être executé au lancement du script
 --]]
@@ -1126,9 +1114,9 @@ console.clear()
 
 -- On regarde si c'est bien la bonne ROM
 if gameinfo.getromname() ~= NOM_JEU then
-	console.log("mauvaise rom (actuellement " .. gameinfo.getromname() .. "), marche uniquement avec " .. nomJeu)
+	console.log("Mauvaise rom (actuellement " .. gameinfo.getromname() .. "), marche uniquement avec " .. nomJeu)
 else
-	console.log("lancement du script")
+	console.log("Lancement du script")
 	math.randomseed(os.time())
 
 	lancerNiveau()
@@ -1241,17 +1229,17 @@ else
 		end
 
 		-- Mise à jour du label actuel
-		local str = "generation " .. nbGeneration .. " Fitness maximal: " ..
-			fitnessMax .. "\nInformations sur l'individu actuel:\n" ..
-			"id: " .. idPopulation .. "/" .. #laPopulation .. " neurones: " ..
-			#laPopulation[idPopulation].lesNeurones .. " connexions: " ..
-			#laPopulation[idPopulation].lesConnexions .. " enfant de l'espece " ..
+		local str = "Generation " .. nbGeneration .. " Fitness maximal: " ..
+			fitnessMax .. "\nInformations sur l'individu actuel :\n" ..
+			"Id: " .. idPopulation .. "/" .. #laPopulation .. " Neurones: " ..
+			#laPopulation[idPopulation].lesNeurones .. " Connexions: " ..
+			#laPopulation[idPopulation].lesConnexions .. " Enfant de l'espece " ..
 			laPopulation[idPopulation].idEspeceParent ..
 			"\n\nInfos sur les especes: " ..
 			"\nIl y a " .. #lesEspeces .. " espece(s) "
 		for i = 1, #lesEspeces, 1 do
 			str = str ..
-				"\nespece " ..
+				"\nEspece " ..
 				i ..
 				" a fait " ..
 				lesEspeces[i].nbEnfant .. " enfant(s)" .. " (fitnessmax " .. lesEspeces[i].fitnessMax .. ") "
