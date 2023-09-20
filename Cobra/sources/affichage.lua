@@ -1,3 +1,10 @@
+--[[
+    EPITECH PROJECT, 2024
+    SuperMarioWorldIA
+    File description:
+    draw.lua
+--]]
+
 -- Dessine les informations actuelles
 function dessinerLesInfos(laPopulation, lesEspeces, nbGeneration)
     gui.drawBox(0, 0, 256, 40, "black", "white")
@@ -17,10 +24,9 @@ function dessinerUnReseau(unReseau)
         for j = 1, NB_TILE_H, 1 do
             local indice = getIndiceLesInputs(i, j)
 
-            -- le i - 1 et j - 1 c'est juste pour afficher les cases à la position x, y quand ils sont == 0
+            -- Le i - 1 et j - 1 c'est juste pour afficher les cases à la position x, y quand ils sont == 0
             local xT = ENCRAGE_X_INPUT + (i - 1) * TAILLE_INPUT
             local yT = ENCRAGE_Y_INPUT + (j - 1) * TAILLE_INPUT
-
 
             local couleurFond = "gray"
             if unReseau.lesNeurones[indice].valeur < 0 then

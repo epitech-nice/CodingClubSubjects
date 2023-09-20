@@ -1,71 +1,3 @@
--- Définition des constantes
-NOM_JEU = "Super Mario World (USA)"
-NOM_SAVESTATE = "debut.state"
-NOM_FICHIER_POPULATION = "gen idGen.pop"
-TAILLE_FORM_W = 380
-TAILLE_FORM_H = 385
-TAILLE_TILE = 16
-TAILLE_VUE_W = TAILLE_TILE * 11
-TAILLE_VUE_H = TAILLE_TILE * 9
-TAILLE_CAMERA_W = 256
-TAILLE_CAMERA_H = 224
-NB_TILE_W = TAILLE_VUE_W / TAILLE_TILE
-NB_TILE_H = TAILLE_VUE_H / TAILLE_TILE
-NB_SPRITE_MAX = 11
-TAILLE_INPUT = 6
-TAILLE_HIDDEN = 4
-TAILLE_OUTPUT_W = 24
-TAILLE_OUTPUT_H = 8
-ENCRAGE_X_INPUT = 20
-ENCRAGE_Y_INPUT = 50
-ENCRAGE_X_HIDDEN = 100
-ENCRAGE_Y_HIDDEN = 50
-ENCRAGE_X_OUTPUT = 190
-ENCRAGE_Y_OUTPUT = 50
-ESPACE_Y_OUTPUT = TAILLE_OUTPUT_H + 5
-NB_HIDDEN_PAR_LIGNE = 10
-FITNESS_LEVEL_FINI = 1000000
-NB_FRAME_RESET_BASE = 33
-NB_FRAME_RESET_PROGRES = 300
-NB_NEURONE_MAX = 100000
-NB_INPUT = NB_TILE_W * NB_TILE_H
-NB_OUTPUT = 8
-NB_INDIVIDU_POPULATION = 100
-EXCES_COEF = 0.50
-POIDSDIFF_COEF = 0.92
-DIFF_LIMITE = 1.00
-CHANCE_MUTATION_RESET_CONNEXION = 0.25
-POIDS_CONNEXION_MUTATION_AJOUT = 0.80
-CHANCE_MUTATION_POIDS = 0.95
-CHANCE_MUTATION_CONNEXION = 0.85
-CHANCE_MUTATION_NEURONE = 0.39
-
--- Définition des boutons de la manette
-lesBoutons = {
-	{ nom = "P1 A" },
-	{ nom = "P1 B" },
-	{ nom = "P1 X" },
-	{ nom = "P1 Y" },
-	{ nom = "P1 Up" },
-	{ nom = "P1 Down" },
-	{ nom = "P1 Left" },
-	{ nom = "P1 Right" }
-}
-
--- Initialisation des variables
-nbInnovation = 0
-fitnessMax = 0
-nbGeneration = 1
-idPopulation = 1
-marioBase = {}
-niveauFini = false
-lesAnciennesPopulation = {}
-nbFrame = 0
-nbFrameStop = 0
-fitnessInit = 0
-niveauFiniSauvegarde = false
-lesEspeces = {}
-laPopulation = {}
 
 -- Fonction pour créer une population
 function newPopulation()
@@ -130,19 +62,19 @@ end
 -- Place la population et la renvoie divisée dans un tableau 2D
 function trierPopulation(laPopulation)
     lesEspeces = {}  -- Tableau pour stocker les espèces
-    
+
     -- Crée la première espèce et ajoute un individu
     ajouterIndividuNouvelleEspece(lesEspeces, copier(laPopulation[fin de la population]))
 
     -- Parcoure chaque individu de la population
     pour chaque individu de 1 à (taille de la population - 1)
         trouvé = faux  -- Variable pour suivre si l'individu a été placé dans une espèce existante
-        
+
         -- Parcoure chaque espèce
         pour chaque espèce dans lesEspeces
             indice = nombre aléatoire entre 1 et taille de la population de l'espèce
             rep = lesEspeces[espèce].lesReseaux[indice]
-            
+
             -- Vérifie si l'individu peut être ajouté à cette espèce
             si getScore(laPopulation[individu], rep) < DIFF_LIMITE alors
                 ajouter un individu à lesEspeces[espèce].lesReseaux (copie de laPopulation[individu])
@@ -150,7 +82,7 @@ function trierPopulation(laPopulation)
                 quitter la boucle
             fin si
         fin pour
-        
+
         -- Si l'individu n'a pas été ajouté à une espèce existante, crée une nouvelle espèce
         si trouvé == faux alors
             créer une nouvelle espèce
@@ -175,7 +107,7 @@ fonction getDiffPoids(unReseau1, unReseau2):
             fin si
         fin pour
     fin pour
-    
+
     si nbConnexion == 0 alors retourner 100000
     retourner total / nbConnexion
 fin fonction
@@ -189,7 +121,7 @@ fonction getDisjoint(unReseau1, unReseau2):
             fin si
         fin pour
     fin pour
-    
+
     retourner (taille de unReseau1.connexions + taille de unReseau2.connexions - 2 * nbPareil)
 fin fonction
 
@@ -198,7 +130,7 @@ fonction getScore(unReseauTest, unReseauRep):
     poidsDiffCoef = POIDSDIFF_COEF
     disjoint = getDisjoint(unReseauTest, unReseauRep)
     maxConnexions = max(taille de unReseauTest.connexions + taille de unReseauRep.connexions, 1)
-    
+
     retourner (excèsCoef * disjoint) / maxConnexions + (poidsDiffCoef * getDiffPoids(unReseauTest, unReseauRep))
 fin fonction
 
@@ -219,7 +151,7 @@ fonction feedForward(unReseau):
         si connexion.estActive alors:
             avantTraitement = unReseau.neurones[connexion.sortie].valeur
             unReseau.neurones[connexion.sortie].valeur = (unReseau.neurones[connexion.entree].valeur * connexion.poids) + unReseau.neurones[connexion.sortie].valeur
-            
+
             si avantTraitement ≠ unReseau.neurones[connexion.sortie].valeur alors:
                 connexion.allume = vrai
             sinon:
@@ -239,7 +171,7 @@ fonction crossover(unReseau1, unReseau2):
     si leBon.fitness < leNul.fitness alors:
         leBon = unReseau2
         leNul = unReseau1
-    
+
     leReseau = copier(leBon)
 
     pour chaque connexion de leReseau.connexions:
@@ -258,21 +190,21 @@ fin fonction
 
 fonction choisirParent(uneEspece):
     si taille de uneEspece == 0 alors afficher "uneEspece vide dans choisir parent ??"
-    
+
     si taille de uneEspece == 1 alors retourner copie de uneEspece[1]
-    
+
     fitnessTotal = 0
     pour chaque individu de uneEspece:
         fitnessTotal = fitnessTotal + individu.fitness
     fin pour
-    
+
     limite = nombre aléatoire entre 0 et fitnessTotal
     total = 0
     pour chaque individu de uneEspece:
         total = total + individu.fitness
         si total >= limite alors retourner copie de individu
     fin pour
-    
+
     afficher "Impossible de trouver un parent ?"
     retourner nul
 fin fonction
@@ -312,13 +244,13 @@ fonction nouvelleGeneration(laPopulation, lesEspeces):
         afficher "Mauvaise population, je reprends la meilleure et ça redevient la base de la nouvelle population"
         afficher ancienPlusFort
     fin si
-    
+
     ajouter laPopulation à lesAnciennesPopulation
 
     nbIndividuTotal = 0
     fitnessMoyenneGlobal = 0
     leMeilleur = newReseau()
-    
+
     pour chaque espèce dans lesEspeces:
         espèce.fitnessMoyenne = 0
         espèce.fitnessMax = 0
@@ -326,7 +258,7 @@ fonction nouvelleGeneration(laPopulation, lesEspeces):
             espèce.fitnessMoyenne = espèce.fitnessMoyenne + individu.fitness
             fitnessMoyenneGlobal = fitnessMoyenneGlobal + individu.fitness
             nbIndividuTotal = nbIndividuTotal + 1
-            
+
             si espèce.fitnessMax < individu.fitness alors:
                 espèce.fitnessMax = individu.fitness
                 si leMeilleur.fitness < individu.fitness alors:
@@ -336,7 +268,7 @@ fonction nouvelleGeneration(laPopulation, lesEspeces):
         fin pour
         espèce.fitnessMoyenne = espèce.fitnessMoyenne / taille de espèce.lesReseaux
     fin pour
-    
+
     si leMeilleur.fitness == FITNESS_LEVEL_FINI alors:
         pour chaque espèce dans lesEspeces:
             pour chaque individu dans espèce.lesReseaux:
@@ -344,7 +276,7 @@ fonction nouvelleGeneration(laPopulation, lesEspeces):
             fin pour
         fitnessMoyenneGlobal = leMeilleur.fitness
     fin si
-    
+
     fitnessMoyenneGlobal = fitnessMoyenneGlobal / nbIndividuTotal
     trier lesEspeces par fitnessMax décroissant
 
@@ -440,7 +372,7 @@ fonction chargerPopulation(chemin):
 
     nbGeneration = lireNombre(fichier)
     nbInnovation = lireNombre(fichier)
-    
+
     pour i de 1 à NB_INDIVIDU_POPULATION faire
         ajouter chargerUnReseau(fichier) à laPopulation
         laPopulation[i].fitness = 1
@@ -455,7 +387,7 @@ fonction chargerPopulation(chemin):
             laPopulation[i] = copie de lesAnciennesPopulation[1][1]
         fin pour
     fin si
-    
+
     fermer fichier
     retourner laPopulation
 fin fonction
@@ -464,11 +396,11 @@ fonction sauvegarderUnReseau(unReseau, fichier):
     écrire unReseau.nbNeurone dans fichier
     écrire taille de unReseau.lesConnexions dans fichier
     écrire unReseau.fitness dans fichier
-    
+
     pour chaque neurone de unReseau.lesNeurones faire
         écrire neurone.id dans fichier
     fin pour
-    
+
     pour chaque connexion de unReseau.lesConnexions faire
         actif = 1
         si connexion.actif n'est pas vrai alors
@@ -489,7 +421,7 @@ fonction chargerUnReseau(fichier):
     unReseau.fitness = lireNombre(fichier)
     unReseau.nbNeurone = nbNeurone
     unReseau.lesConnexions = []
-    
+
     pour i de 1 à nbNeurone faire
         neurone = newNeurone()
         neurone.id = lireNombre(fichier)
@@ -497,7 +429,7 @@ fonction chargerUnReseau(fichier):
         neurone.type = "hidden"
         ajouter neurone à unReseau.lesNeurones
     fin pour
-    
+
     pour i de 1 à nbConnexion faire
         connexion = newConnexion()
         actif = lireNombre(fichier)
@@ -505,22 +437,22 @@ fonction chargerUnReseau(fichier):
         connexion.sortie = lireNombre(fichier)
         connexion.poids = lireNombre(fichier)
         connexion.innovation = lireNombre(fichier)
-        
+
         si actif == 1 alors
             connexion.actif = vrai
         sinon
             connexion.actif = faux
         fin si
-        
+
         ajouter connexion à unReseau.lesConnexions
     fin pour
-    
+
     retourner unReseau
 fin fonction
 
 fonction majReseau(unReseau, marioBase):
     mario = getPositionMario()
-    
+
     si non niveauFini et memory.readbyte(0x0100) == 12 alors
         unReseau.fitness = FITNESS_LEVEL_FINI
         niveauFini = vrai
@@ -528,9 +460,9 @@ fonction majReseau(unReseau, marioBase):
         unReseau.fitness = unReseau.fitness + (mario.x - marioBase.x)
         marioBase.x = mario.x
     fin si
-    
+
     lesInputs = getLesInputs()
-    
+
     pour i de 1 à NB_INPUT faire
         unReseau.lesNeurones[i].valeur = lesInputs[i]
     fin pour
@@ -538,41 +470,41 @@ fin fonction
 
 fonction getLesInputs():
     lesInputs = []
-    
+
     pour i de 1 à NB_TILE_W faire
         pour j de 1 à NB_TILE_H faire
             lesInputs[getIndiceLesInputs(i, j)] = 0
         fin pour
     fin pour
-    
+
     lesSprites = getLesSprites()
-    
+
     pour chaque sprite dans lesSprites faire
         input = convertirPositionPourInput(sprite)
-        
+
         si input.x > 0 et input.x < (TAILLE_VUE_W / TAILLE_TILE) + 1 alors
             lesInputs[getIndiceLesInputs(input.x, input.y)] = -1
         fin si
     fin pour
-    
+
     lesTiles = getLesTiles()
-    
+
     pour i de 1 à NB_TILE_W faire
         pour j de 1 à NB_TILE_H faire
             indice = getIndiceLesInputs(i, j)
-            
+
             si lesTiles[indice] n'est pas 0 alors
                 lesInputs[indice] = lesTiles[indice]
             fin si
         fin pour
     fin pour
-    
+
     retourner lesInputs
 fin fonction
 
 fonction getLesSprites():
     lesSprites = []
-    
+
     pour i de 0 à NB_SPRITE_MAX faire
         si memory.readbyte(0x14C8 + i) > 7 alors
             x = memory.readbyte(0xE4 + i) + memory.readbyte(0x14E0 + i) * 256
@@ -580,7 +512,7 @@ fonction getLesSprites():
             ajouter {x: x, y: y} à lesSprites
         fin si
     fin pour
-    
+
     pour i de 0 à NB_SPRITE_MAX faire
         si memory.readbyte(0x170B + i) n'est pas 0 alors
             x = memory.readbyte(0x171F + i) + memory.readbyte(0x1733 + i) * 256
@@ -588,7 +520,7 @@ fonction getLesSprites():
             ajouter {x: x, y: y} à lesSprites
         fin si
     fin pour
-    
+
     retourner lesSprites
 fin fonction
 

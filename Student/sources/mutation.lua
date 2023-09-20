@@ -42,7 +42,6 @@ function mutationAjouterConnexion(unReseau)
                 local neurone1 = liste[i]
                 local neurone2 = liste[j]
 
-
                 if (neurone1.type == "input" and neurone2.type == "output") or
                     (neurone1.type == "hidden" and neurone2.type == "hidden") or
                     (neurone1.type == "hidden" and neurone2.type == "output") then
@@ -55,8 +54,6 @@ function mutationAjouterConnexion(unReseau)
                             break
                         end
                     end
-
-
 
                     if dejaConnexion == false then
                         -- Nouvelle connexion, traitement terminé
@@ -73,7 +70,6 @@ function mutationAjouterConnexion(unReseau)
             break
         end
     end
-
 
     if traitement == false then
         console.log("impossible de recreer une connexion")
@@ -186,7 +182,6 @@ function getDiffPoids(unReseau1, unReseau2)
         return 100000
     end
 
-
     return total / nbConnexion
 end
 
@@ -265,11 +260,9 @@ end
 function crossover(unReseau1, unReseau2)
     local leReseau = newReseau()
 
-
     -- Quel est le meilleur des deux ?
     local leBon = newReseau()
     local leNul = newReseau()
-
 
     leBon = unReseau1
     leNul = unReseau2
@@ -320,6 +313,6 @@ function choisirParent(uneEspece)
             return copier(uneEspece[i])
         end
     end
-    console.log("impossible de trouver un parent ?")
+    console.log("Impossible de trouver un parent ?")
     return nil
 end

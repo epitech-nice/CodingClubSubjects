@@ -15,7 +15,6 @@ require("sources/game")
 require("sources/generation")
 require("sources/mutation")
 require("sources/reseau")
-require("sources/affichage")
 
 -- Si pas d'évolution ET que le jeu n'est pas en pause, on va voir si on reset ou pas
 function resetGame(fitnessAvant)
@@ -56,27 +55,17 @@ function resetGame(fitnessAvant)
     end
 end
 
--- Permet d'afficher les informations sur l'évolution de l'IA
 function printLabel()
-    local str = "Generation " .. nbGeneration .. " Fitness maximal: " ..
-    fitnessMax .. "\nInformations sur l'individu actuel:\n" ..
-    "id: " .. idPopulation .. "/" .. #laPopulation .. " neurones: " ..
-    #laPopulation[idPopulation].lesNeurones .. " connexions: " ..
-    #laPopulation[idPopulation].lesConnexions .. " enfant de l'espece " ..
-    laPopulation[idPopulation].idEspeceParent ..
-    "\n\nInfos sur les especes: " ..
-    "\nIl y a " .. #lesEspeces .. " espece(s) "
-    for i = 1, #lesEspeces, 1 do
-        str = str ..
-        "\nEspece " ..
-        i ..
-        " a fait " .. lesEspeces[i].nbEnfant .. " enfant(s)" .. " (fitnessmax " .. lesEspeces[i].fitnessMax .. ") "
-    end
+    -- Affichage des infos sur le reseau actuel
+    -- Tu es libre de faire ce que tu veux ici, c'est juste pour que tu vois les infos
+    -- Il n'empêche que je te recommande de garder le fitness max, le nombre de neurone et de connexion
+    -- Et aussi le nombre d'enfant de l'espece parent, ça peut être intéressant
+    local str = "Aucune informations ???"
     forms.settext(labelInfo, str)
 end
 
 console.clear()
--- Petite vérification pour voir si c'est bien la bonne ROM
+-- Petit check pour voir si c'est bien la bonne ROM
 if gameinfo.getromname() ~= NOM_JEU then
     console.log("Mauvaise rom (actuellement " .. gameinfo.getromname() .. "), marche uniquement avec " .. nomJeu)
 else
@@ -134,9 +123,9 @@ else
             gui.clearGraphics()
         end
 
-        majReseau(laPopulation[idPopulation], marioBase)
-        feedForward(laPopulation[idPopulation])
-        appliquerLesBoutons(laPopulation[idPopulation])
+        -- majReseau(laPopulation[idPopulation], marioBase)
+        -- feedForward(laPopulation[idPopulation])
+        -- appliquerLesBoutons(laPopulation[idPopulation])
 
         if nbFrame == 0 then
             fitnessInit = laPopulation[idPopulation].fitness

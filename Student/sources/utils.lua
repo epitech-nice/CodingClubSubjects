@@ -5,8 +5,7 @@
     utils.lua
 --]]
 
--- Copie un truc et renvoie le truc copié
--- J'ai copié ce code d'ici http://lua-users.org/wiki/CopyTable c vrai en +
+-- Copie quelque chose et le renvoie
 function copier(orig)
     local orig_type = type(orig)
     local copy
@@ -23,9 +22,9 @@ function copier(orig)
 end
 
 function getNomFichierSauvegarde()
-    local str = NOM_FICHIER_POPULATION
-    str = string.gsub(str, "idGen", nbGeneration)
-    return str
+    -- Créé le nom du fichier de sauvegarde
+    -- Le nom du fichier est de la forme "pop_idGen.pop"
+    -- Renvoie le nom du fichier
 end
 
 
@@ -67,7 +66,7 @@ function sauvegarderPopulation(laPopulation, estFini)
     sauvegarderUnReseau(lePlusFort, fichier)
     io.close(fichier)
 
-    console.log("sauvegarde terminee au fichier " .. chemin)
+    console.log("Sauvegarde terminee au fichier " .. chemin)
 end
 
 
@@ -79,7 +78,7 @@ function chargerPopulation(chemin)
     local test = string.find(chemin, ".pop")
     local laPopulation = nil
     if test == nil then
-        console.log("le fichier " .. chemin .. " n'est pas du bon format (.pop)")
+        console.log("Le fichier " .. chemin .. " n'est pas du bon format (.pop)")
     else
         laPopulation = {}
         local fichier = io.open(chemin, "r")
@@ -101,7 +100,7 @@ function chargerPopulation(chemin)
         table.insert(lesAnciennesPopulation, copier(laPopulation))
         lesAnciennesPopulation[1][1] = chargerUnReseau(fichier)
 
-        console.log("plus fort charge")
+        console.log("Plus fort charge")
         console.log(lesAnciennesPopulation[1][1])
         -- si le plus fort a fini le niveau, tous les individus de la population deviennent le plus fort
         if lesAnciennesPopulation[1][1].fitness == FITNESS_LEVEL_FINI then
@@ -110,7 +109,7 @@ function chargerPopulation(chemin)
             end
         end
         io.close(fichier)
-        console.log("chargement termine de " .. chemin)
+        console.log("Chargement termine de " .. chemin)
     end
 
     return laPopulation
@@ -203,8 +202,9 @@ end
 
 -- Relance le niveau et reset tout pour le nouvel individu
 function lancerNiveau()
-    savestate.load(NOM_SAVESTATE)
-    marioBase = getPositionMario()
-    niveauFini = false
-    nbFrameStop = 0
+    -- On reset le niveau
+    -- On reset le savestate
+    -- On reset le marioBase
+    -- On reset le niveauFini
+    -- On reset le nbFrameStop
 end
