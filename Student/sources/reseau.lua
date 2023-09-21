@@ -22,7 +22,7 @@ function newReseau()
         -- Ajoute un neurone au reseau de neurone
     -- Fin pour
 
-    -- Retourne le reseau
+    return reseau
 end
 
 -- Mets à jour un réseau de neurone avec ce qu'il y a a l'écran. A appeler à chaque frame quand on en test un reseau

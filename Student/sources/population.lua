@@ -12,4 +12,5 @@ function newPopulation()
         -- Ajoute un reseau de neurone au tableau
     -- Fin pour
     -- Retourne le tableau
+    return {}
 end

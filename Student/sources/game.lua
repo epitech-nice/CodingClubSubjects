@@ -35,6 +35,7 @@ function getLesInputs()
     -- Fin pour
 
     -- Retourne lesInputs
+    return {}
 end
 
 -- Retourne une liste de taille 10 max de la position (x, y) des sprites à l'écran. (sprite = mechant truc)

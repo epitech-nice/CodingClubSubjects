@@ -12,6 +12,7 @@ function newNeurone()
 	-- Id du neurone 0
 	-- Type du neurone ""
     -- Retourne le neurone
+    return {}
 end
 
 -- Ajoute un neurone a un reseau de neurone, fait que pour les neurones qui doivent exister

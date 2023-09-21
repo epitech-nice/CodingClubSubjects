@@ -13,4 +13,5 @@ function newEspece()
 	-- fitnessMax 0
 	-- Tableau de reseau vide
     -- Retourne l'espece
+    return {}
 end

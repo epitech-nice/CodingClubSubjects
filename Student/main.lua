@@ -75,7 +75,7 @@ else
     lancerNiveau()
 
     form = forms.newform(TAILLE_FORM_W, TAILLE_FORM_H, "Informations")
-    labelInfo = forms.label(form, "a maj", 0, 0, 350, 220)
+    labelInfo = forms.label(form, "???", 0, 0, 350, 220)
     estAccelere = forms.checkbox(form, "Accelerer", 10, 220)
     estAfficheReseau = forms.checkbox(form, "Afficher reseau", 10, 240)
     estAfficheInfo = forms.checkbox(form, "Afficher bandeau", 10, 260)
