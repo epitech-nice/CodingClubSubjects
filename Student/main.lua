@@ -5,16 +5,17 @@
     main.lua
 --]]
 
-require("sources/constantes")
-require("sources/utils")
-require("sources/neurone")
-require("sources/connexion")
-require("sources/espece")
-require("sources/population")
 require("sources/game")
-require("sources/generation")
-require("sources/mutation")
+require("sources/utils")
 require("sources/reseau")
+require("sources/espece")
+require("sources/neurone")
+require("sources/mutation")
+require("sources/affichage")
+require("sources/connexion")
+require("sources/constantes")
+require("sources/population")
+require("sources/generation")
 
 -- Si pas d'évolution ET que le jeu n'est pas en pause, on va voir si on reset ou pas
 function resetGame(fitnessAvant)

@@ -202,7 +202,6 @@ end
 
 -- Relance le niveau et reset tout pour le nouvel individu
 function lancerNiveau()
-    -- On reset le niveau
     -- On reset le savestate
     -- On reset le marioBase
     -- On reset le niveauFini
