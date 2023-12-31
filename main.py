@@ -34,7 +34,7 @@ climbDone, startDone, gameDone = False, False, False
 introDone = True
 startOutput = False
 gameStart = True
-throwBarrel = False
+throwGift = False
 jumpLeft, jumpRight = False, False
 jumpStill = False
 hit = False
@@ -65,14 +65,14 @@ jumpPoint = 0
 deathCount = 0
 lives = 2
 
-barrelX = []
-barrelY = []
+giftX = []
+giftY = []
 throwCountdown = 0
-barrelDirection = []
+giftDirection = []
 fall = []
 fallCount = []
-barrelLeft = []
-barrelRight = []
+giftLeft = []
+giftRight = []
 
 platInclineX = [100, 140, 190, 240, 280, 330, 380, 430, 480, 530, 570, 620, 670, 720]
 inclineCount = 0
@@ -86,15 +86,13 @@ fullLadderDown = [True, True, False, True, False, True, True, True, True, False,
 
 leftBoundariesY, rightBoundariesY = [541, 341], [638, 438, 244]
 
-barrelLadderX = [320, 610, 560, 280, 160, 250, 400, 610, 350, 160, 300, 610]
-barrelLadderY1 = [243, 252, 326, 270, 350, 428, 437, 449, 535, 547, 627, 645]
-barrelLadderY2 = [343, 322, 446, 344, 420, 538, 527, 519, 625, 617, 727, 715]
-barrelAdjust = [-2, 1, -1, 4, 2, 3, 5, 1, 5, 1, 4, 1]
+giftLadderX = [320, 610, 560, 280, 160, 250, 400, 610, 350, 160, 300, 610]
+giftLadderY1 = [243, 252, 326, 270, 350, 428, 437, 449, 535, 547, 627, 645]
+giftLadderY2 = [343, 322, 446, 344, 420, 538, 527, 519, 625, 617, 727, 715]
+giftAdjust = [-2, 1, -1, 4, 2, 3, 5, 1, 5, 1, 4, 1]
 
 #Define Images
 title = pygame.image.load("./assets/images/screen/title-screen.png")
-winScreen = pygame.image.load("./assets/images/screen/win-screen.png")
-gameOverScreen = pygame.image.load("./assets/images/screen/game-over-screen.png")
 
 selectIcon = pygame.image.load("./assets/images/mario/select-icon.png")
 life = pygame.image.load("./assets/images/mario/mario-life.png")
@@ -119,22 +117,17 @@ marioImage = marioRight
 paulineHelp = pygame.image.load("./assets/images/pauline/pauline-help.png")
 paulineStill = pygame.image.load("./assets/images/pauline/pauline-still.png")
 
-dkUp1 = pygame.image.load("./assets/images/donkeykong/DK_up1.png")
-dkUp2 = pygame.image.load("./assets/images/donkeykong/DK_up2.png")
-dkEmptyClimb1 = pygame.image.load("./assets/images/donkeykong/dkClimbEmpty1.png")
-dkEmptyClimb2 = pygame.image.load("./assets/images/donkeykong/dkClimbEmpty2.png")
-dkForward = pygame.image.load("./assets/images/donkeykong/dkForward.png")
-dkLeft = pygame.image.load("./assets/images/donkeykong/dkLeft.png")
-dkRight = pygame.image.load("./assets/images/donkeykong/dkRight.png")
-dkDefeat = pygame.image.load("./assets/images/donkeykong/DK-defeat.png")
+dkForward = pygame.image.load("./assets/images/grinch/dkForward.png")
+dkLeft = pygame.image.load("./assets/images/grinch/dkLeft.png")
+dkRight = pygame.image.load("./assets/images/grinch/dkRight.png")
 dkImage = dkForward
 
-barrelStack = pygame.image.load("./assets/images/barrel/barrel-stack.png")
-barrelDown = pygame.image.load("./assets/images/barrel/barrel-down.png")
+giftStack = pygame.image.load("./assets/images/gift/gift-stack.png")
+giftDown = pygame.image.load("./assets/images/gift/gift-down.png")
 
-barrelSequence = load_images("./assets/images/barrel", [f"barrel{i}" for i in range(1, 5)])
+giftSequence = load_images("./assets/images/gift", [f"gift{i}" for i in range(1, 5)])
 
-barrelPic = []
+giftPic = []
 
 brokenHeart = pygame.image.load("./assets/images/life/broken-heart.png")
 fullHeart = pygame.image.load("./assets/images/life/full-heart.png")
@@ -142,20 +135,20 @@ clock = pygame.time.Clock()
 
 
 def reset():
-    global winLevel, climbDone, startDone, gameStart, throwBarrel, jumpLeft, jumpRight, jumpStill, hit, barrelX, barrelY, barrelPic, barrelDirection, throwCountdown, fall, fallCount, barrelLeft, barrelRight, inclineCount, dkClimb, platNum, jumpPoint, climbCount, dkJumpX, dkJumpY, marioX, marioY, dkJumpYNum, addJump, jumpCount, direction, marioImage
+    global winLevel, climbDone, startDone, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount, dkClimb, platNum, jumpPoint, climbCount, dkJumpX, dkJumpY, marioX, marioY, dkJumpYNum, addJump, jumpCount, direction, marioImage
     winLevel = False
     climbDone, startDone, gameDone = False, False, False
     gameStart = False
-    throwBarrel = False
+    throwGift = False
     jumpLeft, jumpRight, jumpStill = False, False, False
     hit = False
-    barrelX, barrelY = [], []
-    barrelPic = []
-    barrelDirection = []
+    giftX, giftY = [], []
+    giftPic = []
+    giftDirection = []
     throwCountdown = 0
     fall = []
     fallCount = []
-    barrelLeft, barrelRight = [], []
+    giftLeft, giftRight = [], []
     inclineCount = 0
     dkClimb = 0
     platNum = 0
@@ -172,13 +165,13 @@ def reset():
 
 def collide():
     """
-    collide - checks whether or not mario has collided into a barrel
+    collide - checks whether or not mario has collided into a gift
     @param: none
     @return: hit(boolean)
     """
     global hit
-    for i in range(0, len(barrelX)): #goes through all the barrels
-        if marioX + 20 >= barrelX[i] and marioX <= barrelX[i] + 26 and marioY + 30 >= barrelY[i] and marioY <= barrelY[i] + 20: #if mario's image touches the barrels image anywhere, hit is True
+    for i in range(0, len(giftX)): #goes through all the gifts
+        if marioX + 20 >= giftX[i] and marioX <= giftX[i] + 26 and marioY + 30 >= giftY[i] and marioY <= giftY[i] + 20: #if mario's image touches the gifts image anywhere, hit is True
             hit = True
     return hit
 
@@ -259,7 +252,7 @@ def incline(y, x, direction, objectt):
 
 def boundaries(x, y):
     """
-    boundaries - checks all of Mario's, the barrels boundaries
+    boundaries - checks all of Mario's, the gifts boundaries
     @param: none
     @return: left(boolean), right(boolean)
     """
@@ -288,13 +281,8 @@ def introScene():
     if dkClimb <= 390: #if DK has climbed less than 390 pixels, blit the background with the ladder
         screen.blit(withLadder, (48, 0))
         #images will switch to make it look like DK is moving
-        if dkClimb % 30 == 0: #if dkClimb is divisble by 30, blit the first climb image
-            screen.blit(dkUp2, (350, 660-dkClimb))
-        else: #else blit the other climb image
-            screen.blit(dkUp1, (370, 660-dkClimb))
-    elif dkClimb > 390 and dkClimb <= 580: #if DK has climbed for between 390 and 580 pixels, blit platform0 and keep dk's image as dkUp2
+    elif dkClimb > 390 and dkClimb <= 580: #if DK has climbed for between 390 and 580 pixels, blit platform0
         screen.blit(platforms[0], (55, 9))
-        screen.blit(dkUp2, (350, 660-dkClimb))
     if climbDone: #if DK is done climbing, blit the falling platforms beams, Pauline and DK jumping
         screen.blit(platforms[platNum], (platformsX[platNum], platformsY[platNum]))
         pauline(paulineStill)
@@ -303,12 +291,12 @@ def introScene():
 
 def background():
     """
-    backgroud - outputs the level and barrel stack
+    backgroud - outputs the level and gift stack
     @param: none
     @return: none
     """
     screen.blit(level, (31, -14))
-    screen.blit(barrelStack, (60, 188))
+    screen.blit(giftStack, (60, 188))
 
 
 def dk():
@@ -338,14 +326,14 @@ def pauline(paulinePic):
     screen.blit(paulinePic, (335, 133))
 
 
-def barrel():
+def gift():
     """
-    barrels - blit all the barrels onto the screen
+    gifts - blit all the gifts onto the screen
     @param: none
     @return: none
     """
-    for i in range(0, len(barrelPic)):
-        screen.blit(barrelPic[i], (barrelX[i], barrelY[i]))
+    for i in range(0, len(giftPic)):
+        screen.blit(giftPic[i], (giftX[i], giftY[i]))
 
 
 def end(endScreen):
@@ -367,10 +355,7 @@ def redraw_screen():
     """
     global climbDone, gameStart, gameDone, startDone, startOutput
     screen.fill(BLACK)
-    if gameDone: #if game is done, output end screen and user
-        #calls drawing fucntions
-        end(gameOverScreen)
-    else: #else the user has not won or lost the game yet
+    if gameDone != True: #if the game is not done, blit the lives
         if pressed == False: #if pressed is false, the title screen is being blited
             screen.blit(title, (54, 18))
         elif pressed and introDone == False: #if pressed is true and introDone, blit the intro sequence
@@ -387,12 +372,12 @@ def redraw_screen():
             dk()
             mario()
             pauline(paulineHelp)
-            barrel()
+            gift()
     pygame.display.update()
 
 
 def in_game():
-    global replay, pressed, introDone, gameStart, throwBarrel, jumpLeft, jumpRight, jumpStill, hit, winGame, winLevel, startOutput, startDone, gameDone, option, direction, levelNum, difficulty, dkClimb, climbCount, platNum, dkJumpX, dkJumpY, dkJumpYNum, marioX, marioY, addJump, jumpCount, jumpPoint, deathCount, lives, barrelX, barrelY, barrelPic, barrelDirection, throwCountdown, fall, fallCount, barrelLeft, barrelRight, inclineCount
+    global replay, pressed, introDone, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, winGame, winLevel, startOutput, startDone, gameDone, option, direction, levelNum, difficulty, dkClimb, climbCount, platNum, dkJumpX, dkJumpY, dkJumpYNum, marioX, marioY, addJump, jumpCount, jumpPoint, deathCount, lives, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount
     global upLadder, downLadder, moveSides
     global marioImage, dkImage
     global move
@@ -400,7 +385,7 @@ def in_game():
         hit = collide()
     #checks if mario has hit a boundary to the left or right of him
     moveLeft, moveRight = boundaries(marioX, marioY)
-    if hit == False: #if hit is fallse, mario has not hit a barrel and normal game play continues
+    if hit == False: #if hit is fallse, mario has not hit a gift and normal game play continues
         #checks if mario is on a ladder and whether he can go up, down or left and right
         upLadder, downLadder, moveSides = ladderCheck()
         if marioY <= 154: #if mario reaches a y value of less than or equal to 154, he has won the game
@@ -438,100 +423,100 @@ def in_game():
                     marioX = marioX - 5
                 elif jumpRight and moveRight: #if mario is jumping right and he can move right, add 5 to his x coorinates
                     marioX = marioX + 5
-            for i in range(0, len(barrelX)): #goes through all the barrels
-                #checks if mario has jumped over a barrel, if so, there is one point will be added if he completes the jump
-                if marioX >= barrelX[i] and marioX <= barrelX[i]+28 and marioY <= barrelY[i]-23 and marioY >= barrelY[i]-65:
+            for i in range(0, len(giftX)): #goes through all the gifts
+                #checks if mario has jumped over a gift, if so, there is one point will be added if he completes the jump
+                if marioX >= giftX[i] and marioX <= giftX[i]+28 and marioY <= giftY[i]-23 and marioY >= giftY[i]-65:
                     jumpPoint = 1
-        for i in range(0, len(barrelPic)): #goes through all the barrels
-            if barrelX[i] <= 31: #if the barrel reaches the end of the structure, make the barrel disappear off the screen
-                barrelX[i], barrelY[i] = -30, -30
-            if fall[i] == False: #if the barrel is not falling, check to see if it is
-                barrelLeft[i], barrelRight[i] = boundaries(barrelX[i], barrelY[i]-15)
-                #reset variable if the barrel has hit a platform and can't move either left or right
-                if barrelLeft[i] == False or barrelRight[i] == False:
+        for i in range(0, len(giftPic)): #goes through all the gifts
+            if giftX[i] <= 31: #if the gift reaches the end of the structure, make the gift disappear off the screen
+                giftX[i], giftY[i] = -30, -30
+            if fall[i] == False: #if the gift is not falling, check to see if it is
+                giftLeft[i], giftRight[i] = boundaries(giftX[i], giftY[i]-15)
+                #reset variable if the gift has hit a platform and can't move either left or right
+                if giftLeft[i] == False or giftRight[i] == False:
                     fall[i] = True
-            #checks which platform the barrel is on to determine which direction it's going
-            if (barrelY[i] <= 255 and barrelY[i] >= 243) or (barrelY[i] <= 452 and barrelY[i] >= 415) or (barrelY[i] <= 648 and barrelY[i] >= 611):
-                barrelDirection[i] = "right"
-            elif (barrelY[i] <= 353 and barrelY[i] >= 317) or (barrelY[i] <= 550 and barrelY[i] >= 513) or (barrelY[i] <= 731 and barrelY[i] >= 709):
-                barrelDirection[i] = "left"
-            if barrelPic[i] != barrelDown: #if the barrel is not on a ladder it is either rolling or falling
-                if fall[i] == False: #if the barrel is not falling, it is rolling left or right
-                    if barrelDirection[i] == "right":
-                        barrelX[i] = barrelX[i] + 10
+            #checks which platform the gift is on to determine which direction it's going
+            if (giftY[i] <= 255 and giftY[i] >= 243) or (giftY[i] <= 452 and giftY[i] >= 415) or (giftY[i] <= 648 and giftY[i] >= 611):
+                giftDirection[i] = "right"
+            elif (giftY[i] <= 353 and giftY[i] >= 317) or (giftY[i] <= 550 and giftY[i] >= 513) or (giftY[i] <= 731 and giftY[i] >= 709):
+                giftDirection[i] = "left"
+            if giftPic[i] != giftDown: #if the gift is not on a ladder it is either rolling or falling
+                if fall[i] == False: #if the gift is not falling, it is rolling left or right
+                    if giftDirection[i] == "right":
+                        giftX[i] = giftX[i] + 10
                     else:
-                        barrelX[i] = barrelX[i] - 10
-                    #checks if the barrel needs to incline up/down and changes the value in the function
-                    barrelY[i] = incline(barrelY[i]-11, barrelX[i], barrelDirection[i], "barrel")
-                    barrelY[i] = barrelY[i] + 11
-                    #subtracted 11 then added it back so that in the function, the values that the functions checks with the y value can be used for both the barrel and mario
-                else: #else the barrel is in the process of falling
+                        giftX[i] = giftX[i] - 10
+                    #checks if the gift needs to incline up/down and changes the value in the function
+                    giftY[i] = incline(giftY[i]-11, giftX[i], giftDirection[i], "gift")
+                    giftY[i] = giftY[i] + 11
+                    #subtracted 11 then added it back so that in the function, the values that the functions checks with the y value can be used for both the gift and mario
+                else: #else the gift is in the process of falling
                     #add one to keep track of how long it has fallen
                     fallCount[i] = fallCount[i] + 1
-                    if barrelLeft[i] == False: #if the barrel is falling on the left side, x is being subtracted by 5
-                        barrelX[i] = barrelX[i] - 5
-                    elif barrelRight[i] == False: #if it's falling from the right x is being added by 5
-                        barrelX[i] = barrelX[i] + 5
+                    if giftLeft[i] == False: #if the gift is falling on the left side, x is being subtracted by 5
+                        giftX[i] = giftX[i] - 5
+                    elif giftRight[i] == False: #if it's falling from the right x is being added by 5
+                        giftX[i] = giftX[i] + 5
                     #changing y by 7 each time
-                    barrelY[i] = barrelY[i] + 7
+                    giftY[i] = giftY[i] + 7
                     if fallCount[i] == 8: #if the count has reached 8, stop falling and reset the values for the next time
                         #adjust to make sure it lands on platform right
-                        barrelY[i] = barrelY[i] + 6
+                        giftY[i] = giftY[i] + 6
                         #resetting variables
                         fallCount[i] = 0
                         fall[i] = False
-                        barrelLeft[i], barrelRight[i] = True, True
-                #changes the picture of the barrel each time
-                if barrelPic[i] == barrelSequence[3]: #if the barrelPic is at index 3, change it to at index 0
-                    barrelPic[i] = barrelSequence[0]
+                        giftLeft[i], giftRight[i] = True, True
+                #changes the picture of the gift each time
+                if giftPic[i] == giftSequence[3]: #if the giftPic is at index 3, change it to at index 0
+                    giftPic[i] = giftSequence[0]
                 else: #else change it to the next number in the list
-                    for j in range(0, len(barrelSequence)-1):
-                        if barrelPic[i] == barrelSequence[j]:
-                            barrelPic[i] = barrelSequence[j + 1]
-            else: #if the barrelPic[i] is barrel down, the barrel is going down a ladder and add 10 to the y value each time
-                barrelY[i] = barrelY[i] + 10
-            #goes through all the ladder coordinates for the barrels
-            for j in range(0, len(barrelLadderX)):
-                #if the barrel's x and y coordinates are same as both barrelLadderX[j] and barrelLadderY[j], respectively, use a random number to choose whether the barrel should go down it or not
-                if barrelX[i] == barrelLadderX[j] and barrelY[i] == barrelLadderY1[j]:
-                    barrelChoice = random.randint(0, 1)
-                    if barrelChoice == 0: #if the random number that was picked is 0, the barrel image and coordinates will be reset
-                        barrelPic[i] = barrelDown
-                        #adjust a bit because the barrel going down is wider than the other barrel images
-                        barrelX[i] = barrelX[i] - 2
-                if barrelX[i] + 2 == barrelLadderX[j] and barrelY[i] == barrelLadderY2[j]: #if the barrel has reached the end of a ladder, reset the variables back
-                    barrelPic[i] = barrelSequence[0]
-                    barrelX[i] = barrelX[i] + 2
-                    #this makes sure that when it comes down it lands properly on the platform instead of 5 pixels too high, as the barrels move 10 pixels at a time
-                    barrelY[i] = barrelY[i] + barrelAdjust[j]
-        if throwBarrel == False: #if throwBarrel is false, get a random number to decide whether or not DK will throw another barrel
-            #after each level the range will be smaller, meaning a higher chance of throwing barrels
+                    for j in range(0, len(giftSequence)-1):
+                        if giftPic[i] == giftSequence[j]:
+                            giftPic[i] = giftSequence[j + 1]
+            else: #if the giftPic[i] is gift down, the gift is going down a ladder and add 10 to the y value each time
+                giftY[i] = giftY[i] + 10
+            #goes through all the ladder coordinates for the gifts
+            for j in range(0, len(giftLadderX)):
+                #if the gift's x and y coordinates are same as both giftLadderX[j] and giftLadderY[j], respectively, use a random number to choose whether the gift should go down it or not
+                if giftX[i] == giftLadderX[j] and giftY[i] == giftLadderY1[j]:
+                    giftChoice = random.randint(0, 1)
+                    if giftChoice == 0: #if the random number that was picked is 0, the gift image and coordinates will be reset
+                        giftPic[i] = giftDown
+                        #adjust a bit because the gift going down is wider than the other gift images
+                        giftX[i] = giftX[i] - 2
+                if giftX[i] + 2 == giftLadderX[j] and giftY[i] == giftLadderY2[j]: #if the gift has reached the end of a ladder, reset the variables back
+                    giftPic[i] = giftSequence[0]
+                    giftX[i] = giftX[i] + 2
+                    #this makes sure that when it comes down it lands properly on the platform instead of 5 pixels too high, as the gifts move 10 pixels at a time
+                    giftY[i] = giftY[i] + giftAdjust[j]
+        if throwGift == False: #if throwGift is false, get a random number to decide whether or not DK will throw another gift
+            #after each level the range will be smaller, meaning a higher chance of throwing gifts
             dkChoice = random.randint(0, 50 - difficulty)
-            if dkChoice == 0: #if the number is 0, reset variables to throw the barrel
+            if dkChoice == 0: #if the number is 0, reset variables to throw the gift
                 dkImage = dkLeft
-                throwBarrel = True
-            else: #else, don't throw any barrels
+                throwGift = True
+            else: #else, don't throw any gifts
                 dkImage = dkForward
-                throwBarrel = False
-        if throwBarrel: #if throwBarrel is true, go through these changes
-            #add to give DK some time to get barrel
+                throwGift = False
+        if throwGift: #if throwGift is true, go through these changes
+            #add to give DK some time to get gift
             throwCountdown = throwCountdown + 1
-            if throwCountdown == 20: #if throwCountdown is 20, create a new barrel
+            if throwCountdown == 20: #if throwCountdown is 20, create a new gift
                 #reset variable
                 dkImage = dkRight
-                #declaring new barrel information
-                barrelX.append(250)
-                barrelY.append(243)
-                barrelDirection.append("right")
-                barrelPic.append(barrelSequence[0])
+                #declaring new gift information
+                giftX.append(250)
+                giftY.append(243)
+                giftDirection.append("right")
+                giftPic.append(giftSequence[0])
                 fall.append(False)
                 fallCount.append(0)
-                barrelLeft.append(True)
-                barrelRight.append(True)
+                giftLeft.append(True)
+                giftRight.append(True)
             if throwCountdown == 40: #if throwCountdown reaches 40, reset variables to when DK wasn't throwing
                 throwCountdown = 0
                 dkImage = dkForward
-                throwBarrel = False
+                throwGift = False
     else: #else, mario gets hit, start the death sequences
         if not pygame.mixer.get_busy():
             pygame.mixer.Sound.play(death)
@@ -545,7 +530,7 @@ def game_exit(keys):
 
 
 def game_events():
-    global replay, pressed, introDone, gameStart, throwBarrel, jumpLeft, jumpRight, jumpStill, hit, winGame, winLevel, startOutput, startDone, gameDone, option, direction, levelNum, difficulty, dkClimb, climbCount, platNum, dkJumpX, dkJumpY, dkJumpYNum, marioX, marioY, addJump, jumpCount, jumpPoint, deathCount, lives, barrelX, barrelY, barrelPic, barrelDirection, throwCountdown, fall, fallCount, barrelLeft, barrelRight, inclineCount
+    global replay, pressed, introDone, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, winGame, winLevel, startOutput, startDone, gameDone, option, direction, levelNum, difficulty, dkClimb, climbCount, platNum, dkJumpX, dkJumpY, dkJumpYNum, marioX, marioY, addJump, jumpCount, jumpPoint, deathCount, lives, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount
     global upLadder, downLadder, moveSides
     global marioImage, dkImage
     global move, inPlay
