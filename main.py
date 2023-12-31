@@ -48,15 +48,13 @@ moveSides, moveLeft, moveRight = True, True, True
 option = "top"
 direction = "right"
 
-platformsX = [55, 55, 51, 60, 56, 56, 56]
-platformsY = [9, 10, 8, 9, 11, 9, 9, 11]
 platNum = 0
 
-dkClimb = 510
+grinchClimb = 510
 climbCount = 15
 platNum = 0
-dkJumpX, dkJumpY = 126, 172
-dkJumpYNum = 0
+grinchJumpX, grinchJumpY = 126, 172
+grinchJumpYNum = 0
 
 marioX, marioY = 150, 720
 addJump = -7
@@ -97,10 +95,6 @@ title = pygame.image.load("./assets/images/screen/title-screen.png")
 selectIcon = pygame.image.load("./assets/images/mario/select-icon.png")
 life = pygame.image.load("./assets/images/mario/mario-life.png")
 
-withLadder = pygame.image.load("./assets/images/platform/withLadder.png")
-
-platforms = load_images("./assets/images/platform", [f"platform{i}" for i in range(7)])
-
 level = pygame.image.load("./assets/images/platform/level.png")
 
 marioLeft = pygame.image.load("./assets/images/mario/mario-left.png")
@@ -117,10 +111,10 @@ marioImage = marioRight
 paulineHelp = pygame.image.load("./assets/images/pauline/pauline-help.png")
 paulineStill = pygame.image.load("./assets/images/pauline/pauline-still.png")
 
-dkForward = pygame.image.load("./assets/images/grinch/dkForward.png")
-dkLeft = pygame.image.load("./assets/images/grinch/dkLeft.png")
-dkRight = pygame.image.load("./assets/images/grinch/dkRight.png")
-dkImage = dkForward
+grinchForward = pygame.image.load("./assets/images/grinch/grinchForward.png")
+grinchLeft = pygame.image.load("./assets/images/grinch/grinchLeft.png")
+grinchRight = pygame.image.load("./assets/images/grinch/grinchRight.png")
+grinchImage = grinchForward
 
 giftStack = pygame.image.load("./assets/images/gift/gift-stack.png")
 giftDown = pygame.image.load("./assets/images/gift/gift-down.png")
@@ -135,7 +129,7 @@ clock = pygame.time.Clock()
 
 
 def reset():
-    global winLevel, climbDone, startDone, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount, dkClimb, platNum, jumpPoint, climbCount, dkJumpX, dkJumpY, marioX, marioY, dkJumpYNum, addJump, jumpCount, direction, marioImage
+    global winLevel, climbDone, startDone, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount, grinchClimb, platNum, jumpPoint, climbCount, grinchJumpX, grinchJumpY, marioX, marioY, grinchJumpYNum, addJump, jumpCount, direction, marioImage
     winLevel = False
     climbDone, startDone, gameDone = False, False, False
     gameStart = False
@@ -150,13 +144,13 @@ def reset():
     fallCount = []
     giftLeft, giftRight = [], []
     inclineCount = 0
-    dkClimb = 0
+    grinchClimb = 0
     platNum = 0
     jumpPoint = 0
     climbCount = 15
-    dkJumpX, dkJumpY = 378, 172
+    grinchJumpX, grinchJumpY = 378, 172
     marioX, marioY = 150, 720
-    dkJumpYNum = 0
+    grinchJumpYNum = 0
     addJump = -7
     jumpCount = 0
     direction = "right"
@@ -272,23 +266,6 @@ def boundaries(x, y):
     return left, right
 
 
-def introScene():
-    """
-    introScene - the start scene of the game
-    @param: none
-    @return: none
-    """
-    if dkClimb <= 390: #if DK has climbed less than 390 pixels, blit the background with the ladder
-        screen.blit(withLadder, (48, 0))
-        #images will switch to make it look like DK is moving
-    elif dkClimb > 390 and dkClimb <= 580: #if DK has climbed for between 390 and 580 pixels, blit platform0
-        screen.blit(platforms[0], (55, 9))
-    if climbDone: #if DK is done climbing, blit the falling platforms beams, Pauline and DK jumping
-        screen.blit(platforms[platNum], (platformsX[platNum], platformsY[platNum]))
-        pauline(paulineStill)
-        screen.blit(dkForward, (dkJumpX, dkJumpY))
-
-
 def background():
     """
     backgroud - outputs the level and gift stack
@@ -299,13 +276,13 @@ def background():
     screen.blit(giftStack, (60, 188))
 
 
-def dk():
+def grinch():
     """
-    dk - outputs DK onto screen
+    grinch - outputs GRINCH onto screen
     @param: none
     @return: none
     """
-    screen.blit(dkImage, (130, 176))
+    screen.blit(grinchImage, (130, 176))
 
 
 def mario():
@@ -358,9 +335,6 @@ def redraw_screen():
     if gameDone != True: #if the game is not done, blit the lives
         if pressed == False: #if pressed is false, the title screen is being blited
             screen.blit(title, (54, 18))
-        elif pressed and introDone == False: #if pressed is true and introDone, blit the intro sequence
-            #calls drawing fucntions
-            introScene()
         elif introDone == True and gameStart == False: #if intro is done and the game hasn't started yet, blit the start screen
             #calls drawing fucntions
             #establishing the start is done by resetting the variables
@@ -369,7 +343,7 @@ def redraw_screen():
         elif (gameStart and winLevel == False): #if the game has started and the level is not won or mario has died, blit the normal game play images
             #calls drawing fucntions
             background()
-            dk()
+            grinch()
             mario()
             pauline(paulineHelp)
             gift()
@@ -377,9 +351,9 @@ def redraw_screen():
 
 
 def in_game():
-    global replay, pressed, introDone, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, winGame, winLevel, startOutput, startDone, gameDone, option, direction, levelNum, difficulty, dkClimb, climbCount, platNum, dkJumpX, dkJumpY, dkJumpYNum, marioX, marioY, addJump, jumpCount, jumpPoint, deathCount, lives, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount
+    global replay, pressed, introDone, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, winGame, winLevel, startOutput, startDone, gameDone, option, direction, levelNum, difficulty, grinchClimb, climbCount, platNum, grinchJumpX, grinchJumpY, grinchJumpYNum, marioX, marioY, addJump, jumpCount, jumpPoint, deathCount, lives, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount
     global upLadder, downLadder, moveSides
-    global marioImage, dkImage
+    global marioImage, grinchImage
     global move
     if winLevel == False: #if winLevel are false, check for collisions
         hit = collide()
@@ -391,7 +365,7 @@ def in_game():
         if marioY <= 154: #if mario reaches a y value of less than or equal to 154, he has won the game
             #reset variables
             winLevel = True
-            dkClimb = -15
+            grinchClimb = -15
             climbCount = 15
             marioX, marioY = 150, 720
             marioImage = marioRight
@@ -489,21 +463,21 @@ def in_game():
                     giftX[i] = giftX[i] + 2
                     #this makes sure that when it comes down it lands properly on the platform instead of 5 pixels too high, as the gifts move 10 pixels at a time
                     giftY[i] = giftY[i] + giftAdjust[j]
-        if throwGift == False: #if throwGift is false, get a random number to decide whether or not DK will throw another gift
+        if throwGift == False: #if throwGift is false, get a random number to decide whether or not GRINCH will throw another gift
             #after each level the range will be smaller, meaning a higher chance of throwing gifts
-            dkChoice = random.randint(0, 50 - difficulty)
-            if dkChoice == 0: #if the number is 0, reset variables to throw the gift
-                dkImage = dkLeft
+            grinchChoice = random.randint(0, 50 - difficulty)
+            if grinchChoice == 0: #if the number is 0, reset variables to throw the gift
+                grinchImage = grinchLeft
                 throwGift = True
             else: #else, don't throw any gifts
-                dkImage = dkForward
+                grinchImage = grinchForward
                 throwGift = False
         if throwGift: #if throwGift is true, go through these changes
-            #add to give DK some time to get gift
+            #add to give GRINCH some time to get gift
             throwCountdown = throwCountdown + 1
             if throwCountdown == 20: #if throwCountdown is 20, create a new gift
                 #reset variable
-                dkImage = dkRight
+                grinchImage = grinchRight
                 #declaring new gift information
                 giftX.append(250)
                 giftY.append(243)
@@ -513,9 +487,9 @@ def in_game():
                 fallCount.append(0)
                 giftLeft.append(True)
                 giftRight.append(True)
-            if throwCountdown == 40: #if throwCountdown reaches 40, reset variables to when DK wasn't throwing
+            if throwCountdown == 40: #if throwCountdown reaches 40, reset variables to when GRINCH wasn't throwing
                 throwCountdown = 0
-                dkImage = dkForward
+                grinchImage = grinchForward
                 throwGift = False
     else: #else, mario gets hit, start the death sequences
         if not pygame.mixer.get_busy():
@@ -530,9 +504,9 @@ def game_exit(keys):
 
 
 def game_events():
-    global replay, pressed, introDone, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, winGame, winLevel, startOutput, startDone, gameDone, option, direction, levelNum, difficulty, dkClimb, climbCount, platNum, dkJumpX, dkJumpY, dkJumpYNum, marioX, marioY, addJump, jumpCount, jumpPoint, deathCount, lives, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount
+    global replay, pressed, introDone, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, winGame, winLevel, startOutput, startDone, gameDone, option, direction, levelNum, difficulty, grinchClimb, climbCount, platNum, grinchJumpX, grinchJumpY, grinchJumpYNum, marioX, marioY, addJump, jumpCount, jumpPoint, deathCount, lives, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount
     global upLadder, downLadder, moveSides
-    global marioImage, dkImage
+    global marioImage, grinchImage
     global move, inPlay
     pygame.event.get()
     keys = pygame.key.get_pressed()
@@ -613,12 +587,11 @@ def game_events():
                 #reset variables to restart
                 reset()
                 inPlay = False
-                winLevel = False
                 pressed = False
                 winGame = False
                 levelNum = 0
                 climbCount = 15
-                dkJumpYNum = 0
+                grinchJumpYNum = 0
                 lives = 2
                 difficulty = 0
             elif option == "bottom": #if the bottom option is selected, you will quit the game
