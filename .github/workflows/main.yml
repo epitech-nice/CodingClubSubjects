@@ -10,8 +10,10 @@ jobs:
     name: Upload to Github Release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Compress to_dowload folders into two zip files
         run: |
