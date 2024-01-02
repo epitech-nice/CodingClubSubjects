@@ -7,18 +7,12 @@
 ##
 
 import random
-import pygame, sys
+import pygame
 from src.utils import *
+from src.events import *
 from pygame.locals import *
 
-#Define Colour Values (R,G,B)
 BLACK = (0, 0, 0)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-LIGHTBLUE = (0, 200, 255)
-YELLOW = (255, 255, 0)
-PURPLE = (170, 0, 225)
-colours = [GREEN, RED, LIGHTBLUE, YELLOW, PURPLE]
 
 #declaring global variables
 leaderboard = {}
@@ -28,41 +22,30 @@ move = 0
 
 replay = True
 pressed = False
-climbDone, startDone, gameDone = False, False, False
-introDone = True
-startOutput = False
-gameStart = True
+climbDone = False
+gameStart = False
 throwGift = False
 jumpLeft, jumpRight, jumpStill = False, False, False
 hit = False
-winGame = False
 winLevel = False
 
 upLadder = False
 downLadder = False
 moveSides, moveLeft, moveRight = True, True, True
 
-option = "top"
 direction = "right"
 
-platNum = 0
-
 grinchClimb = 510
-platNum = 0
 grinchJumpX, grinchJumpY = 126, 172
 
 marioX, marioY = 150, 720
 addJump = -7
-jumpCount = 0
-jumpPoint = 0
-deathCount = 0
+jumpCount, jumpPoint = 0, 0
 
-giftX, giftY = []
+giftX, giftY, giftDirection = [], [], []
 throwCountdown = 0
-giftDirection = []
-fall = []
-fallCount = []
-giftLeft, giftRight = []
+fall, fallCount = [], []
+giftLeft, giftRight = [], []
 
 platInclineX = [100, 140, 190, 240, 280, 330, 380, 430, 480, 530, 570, 620, 670, 720]
 inclineCount = 0
@@ -94,8 +77,7 @@ marioClimb1 = pygame.image.load("./assets/images/mario/marioClimb1.png")
 marioClimb2 = pygame.image.load("./assets/images/mario/marioClimb2.png")
 marioImage = marioRight
 
-paulineHelp = pygame.image.load("./assets/images/pauline/pauline-help.png")
-paulineStill = pygame.image.load("./assets/images/pauline/pauline-still.png")
+santaHelp = pygame.image.load("./assets/images/santa/santa-help.png")
 
 grinchForward = pygame.image.load("./assets/images/grinch/grinchForward.png")
 grinchLeft = pygame.image.load("./assets/images/grinch/grinchLeft.png")
@@ -112,23 +94,18 @@ clock = pygame.time.Clock()
 
 
 def reset():
-    global winLevel, climbDone, startDone, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount, grinchClimb, platNum, jumpPoint, grinchJumpX, grinchJumpY, marioX, marioY, addJump, jumpCount, direction, marioImage
+    global winLevel, climbDone, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount, grinchClimb, jumpPoint, grinchJumpX, grinchJumpY, marioX, marioY, addJump, jumpCount, direction, marioImage
     winLevel = False
-    climbDone, startDone, gameDone = False, False, False
-    gameStart = False
+    climbDone, gameStart = False, False
     throwGift = False
     jumpLeft, jumpRight, jumpStill = False, False, False
     hit = False
-    giftX, giftY = [], []
-    giftPic = []
-    giftDirection = []
+    giftX, giftY, giftPic, giftDirection = [], [], [], []
     throwCountdown = 0
-    fall = []
-    fallCount = []
+    fall, fallCount = [], []
     giftLeft, giftRight = [], []
     inclineCount = 0
     grinchClimb = 0
-    platNum = 0
     jumpPoint = 0
     grinchJumpX, grinchJumpY = 378, 172
     marioX, marioY = 150, 720
@@ -195,8 +172,7 @@ def incline(y, x, direction, objectt):
         startNum, endNum, move = 8, len(platInclineX) - 2, -3
     else: #if not on a platform (on a ladder)
         startNum, endNum, move = 0, 0, 0
-    #goes through the platIncline list, with a range of different numbers depending on which platform the object is on
-    for i in range(startNum, endNum):
+    for i in range(startNum, endNum): #goes through the platIncline list, with a range of different numbers depending on which platform the object is on
         if x == platInclineX[i]: #if the object has the same x as one of the x incline spot, the object will incline up or down
             if (jumpLeft or jumpRight) and objectt == "mario": #if the object is mario and he is jumping left or right, keep track of how many inclines he has passed while jumping
                 inclineCount = inclineCount + 1
@@ -229,43 +205,6 @@ def boundaries(x, y):
     return left, right
 
 
-def background():
-    """
-    backgroud - outputs the level and gift stack
-    @param: none
-    @return: none
-    """
-    screen.blit(level, (31, -14))
-    screen.blit(giftStack, (60, 188))
-
-
-def grinch():
-    """
-    grinch - outputs GRINCH onto screen
-    @param: none
-    @return: none
-    """
-    screen.blit(grinchImage, (130, 176))
-
-
-def mario():
-    """
-    mario - outputs Mario onto screen
-    @param: none
-    @return: none
-    """
-    screen.blit(marioImage, (marioX, marioY))
-
-
-def pauline(paulinePic):
-    """
-    pauline - outputs pauline on to screen
-    @param: paulinePic(image)
-    @return: none
-    """
-    screen.blit(paulinePic, (335, 133))
-
-
 def gift():
     """
     gifts - blit all the gifts onto the screen
@@ -280,30 +219,124 @@ def redraw_screen():
     """
     @redraw_screen - function that redraws the screen
     """
-    global climbDone, gameStart, gameDone, startDone, startOutput
+    global climbDone, gameStart
     screen.fill(BLACK)
-    if gameDone != True:
-        if pressed == False: #if pressed is false, the title screen is being blited
-            screen.blit(title, (54, 18))
-        elif introDone == True and gameStart == False: #if intro is done and the game hasn't started yet, blit the start screen
-            #calls drawing fucntions
-            #establishing the start is done by resetting the variables
-            startOutput = True
-            startDone = True
-        elif (gameStart and winLevel == False): #if the game has started and the level is not won or mario has died, blit the normal game play images
-            #calls drawing fucntions
-            background()
-            grinch()
-            mario()
-            pauline(paulineHelp)
-            gift()
+    if pressed == False: #if pressed is false, the title screen is being blited
+        display_sprite(screen, title, 54, 18)
+    elif (gameStart and winLevel == False): #if the game has started and the level is not won or mario has died, blit the normal game play images
+        display_sprite(screen, level, 31, -14)
+        display_sprite(screen, giftStack, 60, 188)
+        display_sprite(screen, grinchImage, 130, 176)
+        display_sprite(screen, marioImage, marioX, marioY)
+        display_sprite(screen, santaHelp, 335, 133)
+        gift()
     pygame.display.update()
 
 
+def jump_manager():
+    global jumpLeft, jumpRight, jumpStill, jumpCount, jumpPoint, addJump
+    global marioX, marioY, marioImage, move, inclineCount, direction
+    global giftX, giftY
+    if jumpLeft or jumpRight or jumpStill: #if mario is jumping, change x and/or y values accordingly
+        #keeps track of how many jumps
+        jumpCount = jumpCount + 1
+        #changes y coordinates
+        marioY = marioY + addJump
+        if jumpCount == 7: #when jumpCount is 7, make mario come back down by change the number he goes up/down by
+            addJump = 7
+        if jumpCount == 14: #if jumpCount is 14, mario has come back down
+            if direction == "right": #if mario was facing right, change the image back to him facing right, and change mario's Y value if he had jumpped over some inclines
+                marioImage = marioRight
+                marioY = marioY - move * inclineCount
+            else: #else mario was facing left, change the image back to him facing left, and change mario's Y value if he had jumpped over some inclines
+                marioImage = marioLeft
+                marioY = marioY + move * inclineCount
+            addJump = -7
+            jumpCount = 0
+            jumpPoint = 0
+            inclineCount = 0
+            jumpLeft, jumpRight, jumpStill = False, False, False
+        if marioX != 60 and marioX != 710 and (marioX != 320 or marioY >= 232): #if mario has reached a boundary on the sides, don't add to x values
+            #checks how many inclines mario jumped over and whether to move up or down when mario lands
+            move = incline(marioY, marioX, direction, "mario")
+            if jumpLeft and moveLeft: #if mario is jumping left and he can move left, minus 5 to his x coordinates
+                marioX = marioX - 5
+            elif jumpRight and moveRight: #if mario is jumping right and he can move right, add 5 to his x coorinates
+                marioX = marioX + 5
+        for i in range(0, len(giftX)): #goes through all the gifts
+            if marioX >= giftX[i] and marioX <= giftX[i] + 28 and marioY <= giftY[i] - 23 and marioY >= giftY[i] - 65: #checks if mario has jumped over a gift, if so, there is one point will be added if he completes the jump
+                jumpPoint = 1
+
+
+def gift_manager():
+    global giftX, giftY, giftPic, giftDirection, giftSequence, giftChoice, giftLeft, giftRight
+    global giftLadderX, giftLadderY1, giftLadderY2, giftAdjust, giftStack, giftDown, giftSequence
+    global fall, fallCount
+    for i in range(0, len(giftPic)): #goes through all the gifts
+        if giftX[i] <= 31: #if the gift reaches the end of the structure, make the gift disappear off the screen
+            giftX[i], giftY[i] = -30, -30
+        if fall[i] == False: #if the gift is not falling, check to see if it is
+            giftLeft[i], giftRight[i] = boundaries(giftX[i], giftY[i] - 15)
+            if giftLeft[i] == False or giftRight[i] == False: #reset variable if the gift has hit a platform and can't move either left or right
+                fall[i] = True
+        if (giftY[i] <= 255 and giftY[i] >= 243) or (giftY[i] <= 452 and giftY[i] >= 415) or (giftY[i] <= 648 and giftY[i] >= 611): #checks which platform the gift is on to determine which direction it's going
+            giftDirection[i] = "right"
+        elif (giftY[i] <= 353 and giftY[i] >= 317) or (giftY[i] <= 550 and giftY[i] >= 513) or (giftY[i] <= 731 and giftY[i] >= 709):
+            giftDirection[i] = "left"
+        if giftPic[i] != giftDown: #if the gift is not on a ladder it is either rolling or falling
+            if fall[i] == False: #if the gift is not falling, it is rolling left or right
+                if giftDirection[i] == "right":
+                    giftX[i] = giftX[i] + 10
+                else:
+                    giftX[i] = giftX[i] - 10
+                #checks if the gift needs to incline up/down and changes the value in the function
+                giftY[i] = incline(giftY[i] - 11, giftX[i], giftDirection[i], "gift")
+                giftY[i] = giftY[i] + 11
+                #subtracted 11 then added it back so that in the function, the values that the functions checks with the y value can be used for both the gift and mario
+            else: #else the gift is in the process of falling
+                #add one to keep track of how long it has fallen
+                fallCount[i] = fallCount[i] + 1
+                if giftLeft[i] == False: #if the gift is falling on the left side, x is being subtracted by 5
+                    giftX[i] = giftX[i] - 5
+                elif giftRight[i] == False: #if it's falling from the right x is being added by 5
+                    giftX[i] = giftX[i] + 5
+                #changing y by 7 each time
+                giftY[i] = giftY[i] + 7
+                if fallCount[i] == 8: #if the count has reached 8, stop falling and reset the values for the next time
+                    #adjust to make sure it lands on platform right
+                    giftY[i] = giftY[i] + 6
+                    #resetting variables
+                    fallCount[i] = 0
+                    fall[i] = False
+                    giftLeft[i], giftRight[i] = True, True
+            #changes the picture of the gift each time
+            if giftPic[i] == giftSequence[3]: #if the giftPic is at index 3, change it to at index 0
+                giftPic[i] = giftSequence[0]
+            else: #else change it to the next number in the list
+                for j in range(0, len(giftSequence) - 1):
+                    if giftPic[i] == giftSequence[j]:
+                        giftPic[i] = giftSequence[j + 1]
+        else: #if the giftPic[i] is gift down, the gift is going down a ladder and add 10 to the y value each time
+            giftY[i] = giftY[i] + 10
+        for j in range(0, len(giftLadderX)): #goes through all the ladder coordinates for the gifts
+            if giftX[i] == giftLadderX[j] and giftY[i] == giftLadderY1[j]: #if the gift's x and y coordinates are same as both giftLadderX[j] and giftLadderY[j], respectively, use a random number to choose whether the gift should go down it or not
+                giftChoice = random.randint(0, 1)
+                if giftChoice == 0: #if the random number that was picked is 0, the gift image and coordinates will be reset
+                    giftPic[i] = giftDown
+                    #adjust a bit because the gift going down is wider than the other gift images
+                    giftX[i] = giftX[i] - 2
+            if giftX[i] + 2 == giftLadderX[j] and giftY[i] == giftLadderY2[j]: #if the gift has reached the end of a ladder, reset the variables back
+                giftPic[i] = giftSequence[0]
+                giftX[i] = giftX[i] + 2
+                #this makes sure that when it comes down it lands properly on the platform instead of 5 pixels too high, as the gifts move 10 pixels at a time
+                giftY[i] = giftY[i] + giftAdjust[j]
+
+
 def in_game():
-    global replay, pressed, introDone, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, winGame, winLevel, startOutput, startDone, gameDone, option, direction, difficulty, grinchClimb, platNum, grinchJumpX, grinchJumpY, marioX, marioY, addJump, jumpCount, jumpPoint, deathCount, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount
+    global pressed, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, winLevel, direction, difficulty, grinchClimb, grinchJumpX, grinchJumpY, marioX, marioY, addJump, jumpCount, jumpPoint, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount
     global upLadder, downLadder, moveSides
     global marioImage, grinchImage
+    global moveLeft, moveRight
     global move
     if winLevel == False: #if winLevel are false, check for collisions
         hit = collide()
@@ -313,103 +346,12 @@ def in_game():
         #checks if mario is on a ladder and whether he can go up, down or left and right
         upLadder, downLadder, moveSides = ladderCheck()
         if marioY <= 154: #if mario reaches a y value of less than or equal to 154, he has won the game
-            #reset variables
             winLevel = True
             grinchClimb = -15
             marioX, marioY = 150, 720
             marioImage = marioRight
-        if jumpLeft or jumpRight or jumpStill: #if mario is jumping, change x and/or y values accordingly
-            #keeps track of how many jumps
-            jumpCount = jumpCount + 1
-            #changes y coordinates
-            marioY = marioY + addJump
-            if jumpCount == 7: #when jumpCount is 7, make mario come back down by change the number he goes up/down by
-                addJump = 7
-            if jumpCount == 14: #if jumpCount is 14, mario has come back down
-                if direction == "right": #if mario was facing right, change the image back to him facing right, and change mario's Y value if he had jumpped over some inclines
-                    marioImage = marioRight
-                    marioY = marioY - move * inclineCount
-                else: #else mario was facing left, change the image back to him facing left, and change mario's Y value if he had jumpped over some inclines
-                    marioImage = marioLeft
-                    marioY = marioY + move * inclineCount
-                #reseting variables
-                addJump = -7
-                jumpCount = 0
-                jumpPoint = 0
-                inclineCount = 0
-                jumpLeft, jumpRight, jumpStill = False, False, False
-            if marioX != 60 and marioX != 710 and (marioX != 320 or marioY >= 232): #if mario has reached a boundary on the sides, don't add to x values
-                #checks how many inclines mario jumped over and whether to move up or down when mario lands
-                move = incline(marioY, marioX, direction, "mario")
-                if jumpLeft and moveLeft: #if mario is jumping left and he can move left, minus 5 to his x coordinates
-                    marioX = marioX - 5
-                elif jumpRight and moveRight: #if mario is jumping right and he can move right, add 5 to his x coorinates
-                    marioX = marioX + 5
-            for i in range(0, len(giftX)): #goes through all the gifts
-                #checks if mario has jumped over a gift, if so, there is one point will be added if he completes the jump
-                if marioX >= giftX[i] and marioX <= giftX[i]+28 and marioY <= giftY[i]-23 and marioY >= giftY[i]-65:
-                    jumpPoint = 1
-        for i in range(0, len(giftPic)): #goes through all the gifts
-            if giftX[i] <= 31: #if the gift reaches the end of the structure, make the gift disappear off the screen
-                giftX[i], giftY[i] = -30, -30
-            if fall[i] == False: #if the gift is not falling, check to see if it is
-                giftLeft[i], giftRight[i] = boundaries(giftX[i], giftY[i]-15)
-                #reset variable if the gift has hit a platform and can't move either left or right
-                if giftLeft[i] == False or giftRight[i] == False:
-                    fall[i] = True
-            #checks which platform the gift is on to determine which direction it's going
-            if (giftY[i] <= 255 and giftY[i] >= 243) or (giftY[i] <= 452 and giftY[i] >= 415) or (giftY[i] <= 648 and giftY[i] >= 611):
-                giftDirection[i] = "right"
-            elif (giftY[i] <= 353 and giftY[i] >= 317) or (giftY[i] <= 550 and giftY[i] >= 513) or (giftY[i] <= 731 and giftY[i] >= 709):
-                giftDirection[i] = "left"
-            if giftPic[i] != giftDown: #if the gift is not on a ladder it is either rolling or falling
-                if fall[i] == False: #if the gift is not falling, it is rolling left or right
-                    if giftDirection[i] == "right":
-                        giftX[i] = giftX[i] + 10
-                    else:
-                        giftX[i] = giftX[i] - 10
-                    #checks if the gift needs to incline up/down and changes the value in the function
-                    giftY[i] = incline(giftY[i]-11, giftX[i], giftDirection[i], "gift")
-                    giftY[i] = giftY[i] + 11
-                    #subtracted 11 then added it back so that in the function, the values that the functions checks with the y value can be used for both the gift and mario
-                else: #else the gift is in the process of falling
-                    #add one to keep track of how long it has fallen
-                    fallCount[i] = fallCount[i] + 1
-                    if giftLeft[i] == False: #if the gift is falling on the left side, x is being subtracted by 5
-                        giftX[i] = giftX[i] - 5
-                    elif giftRight[i] == False: #if it's falling from the right x is being added by 5
-                        giftX[i] = giftX[i] + 5
-                    #changing y by 7 each time
-                    giftY[i] = giftY[i] + 7
-                    if fallCount[i] == 8: #if the count has reached 8, stop falling and reset the values for the next time
-                        #adjust to make sure it lands on platform right
-                        giftY[i] = giftY[i] + 6
-                        #resetting variables
-                        fallCount[i] = 0
-                        fall[i] = False
-                        giftLeft[i], giftRight[i] = True, True
-                #changes the picture of the gift each time
-                if giftPic[i] == giftSequence[3]: #if the giftPic is at index 3, change it to at index 0
-                    giftPic[i] = giftSequence[0]
-                else: #else change it to the next number in the list
-                    for j in range(0, len(giftSequence)-1):
-                        if giftPic[i] == giftSequence[j]:
-                            giftPic[i] = giftSequence[j + 1]
-            else: #if the giftPic[i] is gift down, the gift is going down a ladder and add 10 to the y value each time
-                giftY[i] = giftY[i] + 10
-            #goes through all the ladder coordinates for the gifts
-            for j in range(0, len(giftLadderX)):
-                if giftX[i] == giftLadderX[j] and giftY[i] == giftLadderY1[j]: #if the gift's x and y coordinates are same as both giftLadderX[j] and giftLadderY[j], respectively, use a random number to choose whether the gift should go down it or not
-                    giftChoice = random.randint(0, 1)
-                    if giftChoice == 0: #if the random number that was picked is 0, the gift image and coordinates will be reset
-                        giftPic[i] = giftDown
-                        #adjust a bit because the gift going down is wider than the other gift images
-                        giftX[i] = giftX[i] - 2
-                if giftX[i] + 2 == giftLadderX[j] and giftY[i] == giftLadderY2[j]: #if the gift has reached the end of a ladder, reset the variables back
-                    giftPic[i] = giftSequence[0]
-                    giftX[i] = giftX[i] + 2
-                    #this makes sure that when it comes down it lands properly on the platform instead of 5 pixels too high, as the gifts move 10 pixels at a time
-                    giftY[i] = giftY[i] + giftAdjust[j]
+        jump_manager()
+        gift_manager()
         if throwGift == False: #if throwGift is false, get a random number to decide whether or not GRINCH will throw another gift
             #after each level the range will be smaller, meaning a higher chance of throwing gifts
             grinchChoice = random.randint(0, 50 - difficulty)
@@ -423,9 +365,7 @@ def in_game():
             #add to give GRINCH some time to get gift
             throwCountdown = throwCountdown + 1
             if throwCountdown == 20: #if throwCountdown is 20, create a new gift
-                #reset variable
                 grinchImage = grinchRight
-                #declaring new gift information
                 giftX.append(250)
                 giftY.append(243)
                 giftDirection.append("right")
@@ -444,26 +384,20 @@ def in_game():
         reset()
 
 
-def game_exit(keys):
-    global inPlay, replay
-    if keys[pygame.K_ESCAPE]: #reset variables to quit program
-        inPlay, replay = False, False
-
-
 def game_events():
-    global replay, pressed, introDone, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, winGame, winLevel, startOutput, startDone, gameDone, option, direction, difficulty, grinchClimb, platNum, grinchJumpX, grinchJumpY, marioX, marioY, addJump, jumpCount, jumpPoint, deathCount, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount
+    global replay, pressed, gameStart, throwGift, jumpLeft, jumpRight, jumpStill, hit, winLevel, direction, difficulty, grinchClimb, grinchJumpX, grinchJumpY, marioX, marioY, addJump, jumpCount, jumpPoint, giftX, giftY, giftPic, giftDirection, throwCountdown, fall, fallCount, giftLeft, giftRight, inclineCount
     global upLadder, downLadder, moveSides
     global marioImage, grinchImage
     global move, inPlay
     pygame.event.get()
     keys = pygame.key.get_pressed()
-    game_exit(keys)
-    if keys[pygame.K_SPACE]: #looks for space to be pressed to make pressed True and start the game
+    inPlay, replay = game_exit(keys, inPlay, replay)
+    if keys[pygame.K_SPACE] and gameStart == False: #looks for space to be pressed to make pressed True and start the game
         pressed = True
+        gameStart = True
         if not pygame.mixer.get_busy():
             pygame.mixer.Sound.play(intro)
-    #must satisfy all these conditions in order for pressing  the left, right, up, down, space(for jumping), and return key to do anything
-    if (gameStart and jumpLeft == False and jumpRight == False and jumpStill == False and winLevel == False and hit == False) or gameDone or winGame:
+    if (gameStart and jumpLeft == False and jumpRight == False and jumpStill == False and winLevel == False and hit == False): #must satisfy all these conditions in order for pressing  the left, right, up, down, space(for jumping), and return key to do anything
         if keys[pygame.K_LEFT] and moveSides and (marioX != 320 or marioY > 232) and moveLeft and marioX != 60: #looks for left arrow to be pressed
             #changes mario's y to incline up/go down with the slope
             marioY = incline(marioY, marioX, direction, "mario")
@@ -497,48 +431,28 @@ def game_events():
                 jumpRight = True
                 marioImage = marioJumpRight
             direction = "right"
-        #looks for up arrow to be pressed
-        elif not keys[pygame.K_LEFT] or not keys[pygame.K_RIGHT]:
+        elif not keys[pygame.K_LEFT] or not keys[pygame.K_RIGHT]: #looks for up arrow to be pressed
             pygame.mixer.Sound.stop(walk)
-        if keys[pygame.K_UP] and (upLadder or gameDone or winGame):
+        if keys[pygame.K_UP] and upLadder:
             if upLadder: # if upLadder is true, move mario up 5 pixels
                 marioY = marioY - 5
                 if marioImage == marioClimb1: #if marioImage is marioClimb1, change it to marioClimb2
                     marioImage = marioClimb2
                 else: #otherwise, change it to marioClimb1
                     marioImage = marioClimb1
-            if gameDone or winGame: #if the user is on one of the menus, change the option to select the top one
-                option = "top"
-        #looks for down arrow to be pressed and only excutes when you can go down a ladder, and to sele
-        if keys[pygame.K_DOWN] and (downLadder or gameDone or winGame):
+        if keys[pygame.K_DOWN] and downLadder: #looks for down arrow to be pressed and only excutes when you can go down a ladder, and to sele
             if downLadder: #if downLadder is true, change mario's y coordinates to go down
                 marioY = marioY + 5
                 if marioImage == marioClimb1: #if marioImage is marioClimb1, change it to marioClimb2
                     marioImage = marioClimb2
                 else: #otherwise, change it to marioClimb1
                     marioImage = marioClimb1
-            if gameDone or winGame: #if user is on one of the menus, change the option to select the bottom one
-                option = "bottom"
-        #looks for space bar to be pressed and can only do something when mario already jumping left or right and you're not in the middle of a ladder
-        if keys[pygame.K_SPACE] and jumpLeft == False and jumpRight == False and moveSides:
-            #it makes jumpStil true
+        if keys[pygame.K_SPACE] and jumpLeft == False and jumpRight == False and moveSides: #looks for space bar to be pressed and can only do something when mario already jumping left or right and you're not in the middle of a ladder
             jumpStill = True
             if direction == "right": #if you are facing left, blit the image of mario jumping, facing right
                 marioImage = marioJumpRight
             else: #else blit mario jumping and facing left
                 marioImage = marioJumpLeft
-        #looks for return to be pressed and it can only do something when the game is lost or won
-        if keys[pygame.K_RETURN] and (gameDone or winGame):
-            #if the top option is selected, reset the game
-            if option == "top":
-                #reset variables to restart
-                reset()
-                inPlay = False
-                pressed = False
-                winGame = False
-                difficulty = 0
-            elif option == "bottom": #if the bottom option is selected, you will quit the game
-                inPlay, replay = False, False
     clock.tick(30)
 
 
@@ -570,7 +484,4 @@ while replay:
         pygame.display.update()
         if inPlay:
             redraw_screen() # the screen window must be constantly redrawn - animation
-        if startOutput:
-            startOutput = False
-            gameStart = True
     pygame.quit()
