@@ -6,9 +6,9 @@ A remake of Donkey Kong game with the Grinch
 
 ### Controls
 
-- `A` and `D` to move left and right
-- `W` to jump
-- `Space` to throw snowballs
+- `Q` to move left and `D` to move right
+- `Z` to move up and `S` to move down
+- `Space` to jump
 
 ### Objective
 
