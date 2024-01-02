@@ -16,9 +16,18 @@ jobs:
           fetch-depth: 0
 
       - name: Compress to_dowload folders into two zip files
-        run: |
-          zip GrinchKong_Cobras.zip ./.to_download/GrinchKong_Cobras
-          zip GrinchKong_Participants.zip ./.to_download/GrinchKong_Participants
+        uses: vimtor/action-zip@v1.1
+        with:
+          files: ./.to_download/GrinchKong_Cobras
+          recursive: true
+          dest: GrinchKong_Cobras.zip
+
+      - name: Compress to_dowload folders into two zip files
+        uses: vimtor/action-zip@v1.1
+        with:
+          files: ./.to_download/GrinchKong_Participants
+          recursive: true
+          dest: GrinchKong_Participants.zip
 
       - name: Set Tag
         id: current-datetime
