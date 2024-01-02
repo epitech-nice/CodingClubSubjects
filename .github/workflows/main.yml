@@ -40,7 +40,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.current-datetime.outputs.CURRENT_DATETIME }}
-          release_name: Release ${{ steps.current-datetime.outputs.CURRENT_DATETIME }}
+          release_name: Release_${{ steps.current-datetime.outputs.CURRENT_DATETIME }}
           draft: false
           prerelease: false
 
