@@ -1,0 +1,32 @@
+name: Grinch Kong CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release-folders:
+    name: Upload to Github Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pulling Github Submodules
+        uses: actions/checkout@v4.1.1
+        with:
+          token: ${{ secrets.SUBMODULES_PAT }}
+          submodules: recursive
+
+      - name: Compress to_dowload folders into two zip files
+        run: |
+          zip GrinchKong_Cobras.zip GrinchKong_Cobras
+          zip GrinchKong_Participants.zip GrinchKong_Participants
+
+      - name: Set Tag
+        id: current-datetime
+        run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d-%H_%M_%S%z')" >> "$GITHUB_OUTPUT"
+
+      - name: Create Release
+        run: |
+          gh release create v${{ steps.current-datetime.outputs.CURRENT_DATETIME }} --title "v${{ steps.current-datetime.outputs.CURRENT_DATETIME }}" --notes "v${{ steps.current-datetime.outputs.CURRENT_DATETIME }}" --target main GrinchKong_Cobras.zip GrinchKong_Participants.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
