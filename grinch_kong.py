@@ -15,12 +15,20 @@ BLACK = (0, 0, 0)
 
 class Game:
     def __init__(self):
+        """
+        The above code is initializing the Pygame library and setting up
+        various variables and images for the game "Grinch Kong". It also loads
+        sound effects and sets the display caption. Finally, it starts the main
+        game loop.
+        @param: none
+        @return: none
+        """
         # Initialize Pygame
         pygame.init()
         self.inLoop, self.inMenu, self.inGame = True, True, False
 
-        self.difficulty = 0
         self.move = 0
+        self.difficulty = 0
 
         self.hit = False
         self.pressed = False
@@ -103,6 +111,19 @@ class Game:
         self.run()
 
     def reset(self):
+        """
+        The above code is defining and initializing several variables for a
+        game. These variables are used to keep track of various states and
+        positions in the game, such as whether the player has hit an object,
+        whether the player is currently throwing a gift, whether the game is in
+        the menu or in gameplay, whether the player is jumping left, right, or
+        still, and various other variables related to the player's position and
+        movement. The code also assigns initial values to some of these
+        variables, such as the starting position of the player character and
+        the direction the character is facing.
+        @param: none
+        @return: none
+        """
         self.hit = False
         self.throwGift = False
         self.inMenu, self.inGame = True, False
@@ -122,9 +143,23 @@ class Game:
         self.marioImage = self.marioRight
 
     def draw_menu(self):
+        """
+        The above code is calling a function named `display_sprite` and passing
+        in the arguments `self.screen`, `self.title`, `54`, and `18`.
+        @param: none
+        @return: none
+        """
         display_sprite(self.screen, self.title, 54, 18)
 
     def draw_game(self):
+        """
+        The above code is displaying various sprites on the screen. It calls
+        the `display_sprite` function multiple times to display different
+        sprites at different positions on the screen. It also uses a for loop
+        to display multiple gift sprites at different positions.
+        @param: none
+        @return: none
+        """
         display_sprite(self.screen, self.level, 31, -14)
         display_sprite(self.screen, self.giftStack, 60, 188)
         display_sprite(self.screen, self.grinchImage, 130, 176)
@@ -133,10 +168,12 @@ class Game:
         for i in range(0, len(self.giftPic)):
             self.screen.blit(self.giftPic[i], (self.giftX[i], self.giftY[i]))
 
-
     def collide(self):
         """
-        collide - checks whether or not mario has collided into a gift
+        The above code is checking if the position of the character (marioX,
+        marioY) overlaps with any of the gift positions (giftX[i], giftY[i]).
+        If there is an overlap, the variable "hit" is set to True. The code
+        then returns the value of "hit".
         @param: none
         @return: hit(boolean)
         """
@@ -145,14 +182,17 @@ class Game:
                 self.hit = True
         return self.hit
 
-
     def ladderCheck(self):
         """
-        ladderCheck - checks whether or not there is a ladder at mario's location
+        The above code is checking if Mario is in range of a ladder. If Mario
+        is on a ladder, he can move up, down, and to the sides. The code checks
+        if Mario is at the top or bottom of the ladder and if the ladder is
+        broken going up or down. It sets the variables upLadder, downLadder,
+        and moveSides accordingly. Finally, it returns the values of these
+        variables.
         @param: none
         @return: upLadder(boolean), downLadder(boolean), moveSides(boolean)
         """
-        global marioY
         upLadder, downLadder, moveSides  = False, False, True
         for i in range(0, len(self.ladderX1)):
             if self.marioX >= self.ladderX1[i] and self.marioX <= self.ladderX2[i] and self.marioY >= self.ladderY1[i] and self.marioY <= self.ladderY2[i]: # if mario is in range of a ladder, he can move up, down, and to the sides
@@ -171,10 +211,14 @@ class Game:
                 break
         return upLadder, downLadder, moveSides
 
-
     def incline(self, y, x, direction, objectt):
         """
-        incline - moves Mario up so that he can go on an incline when walking/jumping on the platform
+        The above code is checking which platform the object is on and then
+        determining the range where the object inclines and how much it moves
+        vertically when going right on an inclined part. It uses a series of
+        if-elif statements to determine the platform based on the object's
+        y-coordinate. It then sets the startNum, endNum, and move variables
+        based on the platform.
         @param: y(int), x(int), direction(str), objectt(str)
         @return: y(int) or move(int)
         """
@@ -203,10 +247,16 @@ class Game:
         else: #else return the new y value
             return y
 
-
     def boundaries(self, x, y):
         """
-        boundaries - checks all of Mario's, the gifts boundaries
+        The above code is checking if Mario has reached a possible boundary to
+        the left or right of him. It does this by checking if the x-coordinate
+        of Mario's position is within a certain range. If Mario is within the
+        range, it then checks if his y-coordinate is within a certain range of
+        the corresponding boundary. If both conditions are met, it sets the
+        left or right variable to False, indicating that Mario cannot move in
+        that direction. The code then returns the values of the left and right
+        variables.
         @param: none
         @return: left(boolean), right(boolean)
         """
@@ -222,6 +272,13 @@ class Game:
         return left, right
 
     def jump_manager(self):
+        """
+        The above code is part of a larger code that controls the movement and
+        actions of a character named Mario in a game. This specific portion of
+        the code is responsible for handling Mario's jumping behavior.
+        @param: none
+        @return: none
+        """
         if self.jumpLeft or self.jumpRight or self.jumpStill: #if mario is jumping, change x and/or y values accordingly
             self.jumpCount = self.jumpCount + 1
             self.marioY = self.marioY + self.addJump
@@ -250,6 +307,12 @@ class Game:
                     self.jumpPoint = 1
 
     def gift_manager(self):
+        """
+        The above code is a part of a larger program and it is responsible for
+        controlling the movement and behavior of multiple gift objects.
+        @param: none
+        @return: none
+        """
         for i in range(0, len(self.giftPic)):
             if self.giftX[i] <= 31: #if the gift reaches the end of the structure, make the gift disappear off the screen
                 self.giftX[i], self.giftY[i] = -30, -30
@@ -303,6 +366,12 @@ class Game:
                     self.giftY[i] = self.giftY[i] + self.giftAdjust[j]
 
     def game_logic(self):
+        """
+        The above code is part of a game and it is responsible for managing the
+        gameplay of the character "Mario" and the enemy character "Grinch".
+        @param: none
+        @return: none
+        """
         self.hit = self.collide()
         self.moveLeft, self.moveRight = self.boundaries(self.marioX, self.marioY)
         if self.hit == False: #if hit is fallse, mario has not hit a gift and normal game play continues
@@ -342,8 +411,15 @@ class Game:
                 pygame.mixer.Sound.play(self.death)
             self.reset()
 
-
     def mouvements(self):
+        """
+        The above code is handling keyboard inputs for controlling the movement
+        of a character named "mario" in a game. It checks for various key
+        presses and updates the position and image of the character
+        accordingly.
+        @param: none
+        @return: none
+        """
         if self.inGame and self.jumpLeft == False and self.jumpRight == False and self.jumpStill == False and self.hit == False:
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT] and self.moveSides and (self.marioX != 320 or self.marioY > 232) and self.moveLeft and self.marioX != 60: #looks for left arrow to be pressed
@@ -401,6 +477,13 @@ class Game:
                     self.marioImage = self.marioJumpLeft
 
     def run(self):
+        """
+        The above code is a snippet of a Python program using the Pygame
+        library. It appears to be a game loop that handles events, updates the
+        game state, and draws the game on the screen.
+        @param: none
+        @return: none
+        """
         try:
             pygame.mixer.music.play(-1)
         except:
@@ -427,14 +510,29 @@ class Game:
             self.draw()
 
     def update(self):
-        # Update game logic
+        """
+        The above code is checking the current state of the game and calling
+        the game_logic() function if the game is in progress (inGame). If the
+        game is in the menu (inMenu), it does nothing.
+        @param: none
+        @return: none
+        """
         if self.inMenu:
+            # Do nothing
             pass
         elif self.inGame:
+            # Update game logic
             self.game_logic()
 
     def draw(self):
-        # Clear screen
+        """
+        The above code is a snippet of code written in Python. It is part of a
+        larger program that uses the Pygame library to create a graphical user
+        interface.
+        Clear screen
+        @param: none
+        @return: none
+        """
         self.screen.fill(BLACK)
         if self.inMenu:
             self.draw_menu()
