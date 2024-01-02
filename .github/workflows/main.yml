@@ -10,11 +10,8 @@ jobs:
     name: Upload to Github Release
     runs-on: ubuntu-latest
     steps:
-      - name: Pulling Github Submodules
-        uses: actions/checkout@v4.1.1
-        with:
-          token: ${{ secrets.SUBMODULES_PAT }}
-          submodules: recursive
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Compress to_dowload folders into two zip files
         run: |
