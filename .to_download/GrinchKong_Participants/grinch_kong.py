@@ -194,21 +194,13 @@ class Game:
         @return: upLadder(boolean), downLadder(boolean), moveSides(boolean)
         """
         upLadder, downLadder, moveSides  = False, False, True
-        # for i in range(0, len(self.ladderX1)):
-        #     if self.marioX >= self.ladderX1[i] and self.marioX <= self.ladderX2[i] and self.marioY >= self.ladderY1[i] and self.marioY <= self.ladderY2[i]: # if mario is in range of a ladder, he can move up, down, and to the sides
-        #         downLadder = True
-        #         upLadder = True
-        #         moveSides = False
-        #         if self.marioY == self.ladderY1[i]: #if mario is at the top of a ladder, he can't move up further
-        #             upLadder = False
-        #             if self.fullLadderUp[i]: #if the ladder isn't broken going up, he can move to the sides when at the top
-        #                 moveSides = True
-        #         if self.marioY == self.ladderY2[i]: #if mario is at the bottom of the ladder, he can't move down further
-        #             downLadder = False
-        #             if self.fullLadderDown[i]: #if the ladder isn't broken going down, he can move to the sides when at the bottom
-        #                 moveSides = True
-        #     if upLadder or downLadder: #break out of the loop to stop checking for which ladder mario because the computer has already found it
-        #         break
+        # Parcourt toutes les échelles
+        # Vérifie si Mario se trouve à portée d'une échelle pour lui permettre de se déplacer vers le haut, le bas et sur les côtés
+        # Si Mario est en haut de l'échelle, il ne peut pas monter plus haut
+        # Si l'échelle n'est pas cassée en haut, il peut se déplacer sur les côtés en haut de l'échelle
+        # Si Mario est en bas de l'échelle, il ne peut pas descendre plus bas
+        # Si l'échelle n'est pas cassée en bas, il peut se déplacer sur les côtés en bas de l'échelle
+        # Si Mario peut monter ou descendre l'échelle, sortir de la boucle car l'échelle appropriée a été trouvée
         return upLadder, downLadder, moveSides
 
     def incline(self, y, x, direction, objectt):
@@ -279,32 +271,26 @@ class Game:
         @param: none
         @return: none
         """
+        self.jumpLeft, self.jumpRight, self.jumpStill = False, False, False # A Enlever après avoir complété le code
         if self.jumpLeft or self.jumpRight or self.jumpStill: #if mario is jumping, change x and/or y values accordingly
             self.jumpCount = self.jumpCount + 1
-            # self.marioY = self.marioY + self.addJump
-            # if self.jumpCount == 7: #when jumpCount is 7, make mario come back down by change the number he goes up/down by
-            #     self.addJump = 7
-            # if self.jumpCount == 14: #if jumpCount is 14, mario has come back down
-            #     if self.direction == "right": #if mario was facing right, change the image back to him facing right, and change mario's Y value if he had jumpped over some inclines
-            #         self.marioImage = self.marioRight
-            #         self.marioY = self.marioY - self.move * self.inclineCount
-            #     else: #else mario was facing left, change the image back to him facing left, and change mario's Y value if he had jumpped over some inclines
-            #         self.marioImage = self.marioLeft
-            #         self.marioY = self.marioY + self.move * self.inclineCount
-            #     self.addJump = -7
-            #     self.jumpCount = 0
-            #     self.jumpPoint = 0
-            #     self.inclineCount = 0
-            self.jumpLeft, self.jumpRight, self.jumpStill = False, False, False
-            # if self.marioX != 60 and self.marioX != 710 and (self.marioX != 320 or self.marioY >= 232): #if mario has reached a boundary on the sides, don't add to x values
-            #     self.move = self.incline(self.marioY, self.marioX, self.direction, "mario")
-            #     if self.jumpLeft and self.moveLeft: #if mario is jumping left and he can move left, minus 5 to his x coordinates
-            #         self.marioX = self.marioX - 5
-            #     elif self.jumpRight and self.moveRight: #if mario is jumping right and he can move right, add 5 to his x coorinates
-            #         self.marioX = self.marioX + 5
-            # for i in range(0, len(self.giftX)): #goes through all the gifts
-            #     if self.marioX >= self.giftX[i] and self.marioX <= self.giftX[i] + 28 and self.marioY <= self.giftY[i] - 23 and self.marioY >= self.giftY[i] - 65: #checks if mario has jumped over a gift, if so, there is one point will be added if he completes the jump
-            #         self.jumpPoint = 1
+            # Augmenter la position Y de Mario de la quantité de saut. (7)
+            # Vérifier si Mario a atteint le sommet de son saut. (14)
+            # Changer la quantité de saut pour commencer à descendre.
+            # Vérifier si Mario a terminé son saut.
+            # Vérifier la direction de Mario et mettre à jour son image et sa position en conséquence.
+            # Définir l'image de Mario comme lui faisant face à droite.
+            # Ajuster la position Y de Mario en fonction des inclinaisons qu'il a sautées.
+            # Définir l'image de Mario comme lui faisant face à gauche.
+            # Ajuster la position Y de Mario en fonction des inclinaisons qu'il a sautées.
+            # Réinitialiser les variables de saut.
+
+            # Vérifie si Mario a atteint une limite sur les côtés pour ne pas modifier ses coordonnées X
+            # Calcule le mouvement en fonction de la position et de la direction de Mario
+            # Si Mario saute vers la gauche et peut se déplacer vers la gauche, diminue ses coordonnées X (5)
+            # Si Mario saute vers la droite et peut se déplacer vers la droite, augmente ses coordonnées X (5)
+            # Parcourt tous les cadeaux
+            # Vérifie si Mario a sauté par-dessus un cadeau, ajoute un point s'il complète le saut
 
     def gift_manager(self):
         """
