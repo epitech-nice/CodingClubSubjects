@@ -1,0 +1,80 @@
+/* ========== INFO CARD ========== */
+
+.info_card {
+    height: 248px;
+    width: 608px;
+    margin: 64px;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+
+    color: #FFFFFF;
+    z-index: 0;
+    text-decoration: none;
+
+    transition: width 0.3s ease-in-out,
+                font-size 0.3s ease-in-out;
+}
+
+.info_card:hover {
+    width: 1216px;
+    font-size: xx-large;
+}
+
+
+/* ========== BACKGROUND ========== */
+
+.background-epitech {
+    background: linear-gradient(
+        rgba(0, 0, 0, 0.7),
+        rgba(0, 0, 0, 0.7)
+      ),
+      url(../assets/epitech.jpg);
+      background-size: cover;
+      background-position: center;
+}
+
+.background-casino {
+    background: linear-gradient(
+        rgba(0, 0, 0, 0.7),
+        rgba(0, 0, 0, 0.7)
+      ),
+      url(../assets/casino.jpg);
+      background-size: cover;
+      background-position: center;
+}
+
+.background-hotdog {
+    background: linear-gradient(
+        rgba(0, 0, 0, 0.7),
+        rgba(0, 0, 0, 0.7)
+      ),
+      url(../assets/hotdog.jpeg);
+      background-size: cover;
+      background-position: center;
+}
+
+
+/* ========== TITLE ========== */
+
+.info_card .title {
+    grid-area: 1 / 1 / 2 / 3;
+    font-size: 4em;
+}
+
+
+/* ========== DURATION ========== */
+
+.info_card .duration {
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+
+/* ========== SUMMARY ========== */
+
+.info_card .summary {
+    grid-area: 2 / 2 / 3 / 3;
+}
